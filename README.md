@@ -7,11 +7,11 @@ Dependencies:
       -> tested with version 2.04
     *SDL2_net (https://www.libsdl.org/projects/SDL_net/)
       -> tested with version 2.01
-      
+    *cmake 3.10 or higher
       
 Install:
   
-  Create a build directory and use cmake, make and make install
+  Create a build directory and use cmake, make and make install (tutorial: https://cmake.org/runningcmake/)
   
 Example:
   
