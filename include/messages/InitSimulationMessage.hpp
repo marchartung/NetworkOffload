@@ -16,7 +16,7 @@ namespace NetOff
     class InitSimulationMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
      public:
-        InitSimulationMessage(const int & simId, const VariableList & inputs, const VariableList & outputs, const double * rVals, const int * iVals, const char * bVals);
+        InitSimulationMessage(const int & simId, const VariableList & inputs, const VariableList & outputs);
 
         InitSimulationMessage(std::shared_ptr<char> & data);
 
@@ -46,10 +46,6 @@ namespace NetOff
         int * _id;
         char * _inputPtr;
         char * _outputPtr;
-
-        const double * _reals;
-        const int * _ints;
-        const char * _bools;
     };
 }
 

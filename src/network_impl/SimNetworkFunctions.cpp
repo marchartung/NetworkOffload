@@ -15,9 +15,6 @@ namespace NetOff
     {
         size_t num = getIntegralFromData<size_t>(data);
         const char * start = shift<size_t>(data);
-        for(size_t i=0;i<num;++i)
-            std::cout << "'" << (int)start[i] << "' ";
-        std::cout << "\n";
         std::string res(start, num);
         return res;
     }

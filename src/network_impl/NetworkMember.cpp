@@ -30,17 +30,11 @@ namespace NetOff
     {
         int numBits = -1;
         int i = 0;
-        //std::cout << "sending " << num << " Bytes\n";
-        //std::cout << "[";
-        //for (size_t j = 0; j < num; ++j)
-          //  std::cout << "'" << (int)buffer[j] << "' ";
-        //std::cout << "]\n";
         while (i < num)
         {
             int partNum = std::min(num, i + _maxBuffer) - i;
             numBits = SDLNet_TCP_Send(_socket, static_cast<const void *>(&buffer[i]), partNum);
 
-          //  std::cout << "sent " << numBits << "\n";
             if (numBits > 0)
                 i += numBits;
             else if (i == numBits && i < num)
@@ -49,7 +43,6 @@ namespace NetOff
                 return false;
             }
         }
-        //std::cout << "complete: " << i << "/" << num << " Bytes.\n\n";
         return true;
     }
 
@@ -57,19 +50,10 @@ namespace NetOff
     {
         int numBits = -1;
         int i = 0;
-        //std::cout << "recv " << num << " Bytes\n";
         while (i < num)
         {
             unsigned partNum = std::min(num, i + _maxBuffer) - i;
             numBits = SDLNet_TCP_Recv(_socket, &buffer[i], partNum);
-            //std::cout << "received " << numBits << ":\n";
-            if (numBits > 0)
-            {
-              //  std::cout << "[";
-                //for (size_t j = i; j < i + numBits; ++j)
-                  //  std::cout << "'" << (int)buffer[j] << "' ";
-                //std::cout << "]\n";
-            }
             if (numBits > 0)
                 i += numBits;
             else if (i == 0 && i < num)
@@ -79,14 +63,12 @@ namespace NetOff
             }
 
         }
-        //std::cout << "complete: " << i << "/" << num << " Bytes.\n\n";
         return true;
     }
 
     bool NetworkMember::variableSend(const char* buffer, const int & num)
     {
         int numCopy = num;
-        std::cout << "variable send: " << num << " Bytes\n";
         if (!send(reinterpret_cast<char *>(&numCopy), sizeof(numCopy)))
             return false;
         return send(buffer, num);

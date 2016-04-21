@@ -107,14 +107,10 @@ namespace NetOff
         VariableList res;
         std::vector<std::vector<std::string>> & vars = res._vars;
 
-        for (size_t i = 0; i < 40; ++i)
-            std::cout << "'" << (int) data[i] << "' ";
-        std::cout << "\n";
         vars = std::vector<std::vector<std::string>>(3);
         const char * curPos = data;
         for (size_t i = 0; i < 3; ++i)
         {
-            std::cout << "adding " << getIntegralFromData<size_t>(curPos) << " elemts to " << i << "\n";
             vars[i] = std::vector<std::string>(getIntegralFromData<size_t>(curPos));
             curPos = shift<size_t>(curPos);
         }

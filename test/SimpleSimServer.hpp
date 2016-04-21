@@ -12,26 +12,27 @@
 
 struct PseudoFmu
 {
-    double states[2] = { 0, 0 };
+    double states[4] = { 0, 0, 0, 0 };
     double currentTime = 0;
 
-    NetOff::VariableList vars = NetOff::VariableList( { "x", "y" }, { }, { });
+    NetOff::VariableList vars = NetOff::VariableList( { "x", "y", "dx", "dy" }, { }, { });
 
     void init(const double * in)
     {
         for (size_t i = 0; i < 2; ++i)
-            states[i] = in[i];
+            states[i+2] = in[i];
     }
 
     std::vector<double> solve(const double * in, const double & time)
     {
         for (size_t i = 0; i < 2; ++i)
+        {
             states[i] += in[i] * (time - currentTime);
+            states[i+2] = in[i];
+        }
 
         currentTime = time;
-        std::cout << time << "," << states[0] << "," << states[1] << "\n";
-        return
-        {   states[0],states[1]};
+        return {states[0],states[1],states[2],states[3]};
     }
 };
 
@@ -77,7 +78,7 @@ int serverFunc(int port)
 
                    //check if the variable names are known:
                    for (size_t i = 0; i < inputsVars.getReals().size(); ++i)
-                       if (!(inputsVars.getReals()[i] == "x" || inputsVars.getReals()[i] == "y"))
+                       if (!(inputsVars.getReals()[i] == "x" || inputsVars.getReals()[i] == "y" || inputsVars.getReals()[i] == "dx" || inputsVars.getReals()[i] == "dy"))
                        {
                            // unkown variables so shut down:
                            noFS.deinitialize();
@@ -88,7 +89,7 @@ int serverFunc(int port)
 
                    //check if the variable names are known:
                    for (size_t i = 0; i < outputVars.getReals().size(); ++i)
-                       if (!(inputsVars.getReals()[i] == "x" || inputsVars.getReals()[i] == "y"))
+                       if (!(outputVars.getReals()[i] == "x" || outputVars.getReals()[i] == "y" || outputVars.getReals()[i] == "dx" || outputVars.getReals()[i] == "dy"))
                        {
                            // unkown variables so shut down:
                            noFS.deinitialize();
@@ -135,11 +136,13 @@ int serverFunc(int port)
                    requestedFmu = noFS.getLastFmuId();
                    // when receiving inputs return the requested time step:
                    NetOff::ValueContainer & inputs = noFS.recvInputValues(requestedFmu);
+                   std::cout << fmus[requestedFmu].currentTime << "  Inputs: " << inputs << "\n";
                    // calc a new step: (for examplewith  the PseudoFmu)
                    fmus[requestedFmu].solve(inputs.getRealValues(), noFS.getLastReceivedTime(requestedFmu));
                    //set the states in the container:
                    NetOff::ValueContainer & outputs = noFS.getOutputValueContainer(requestedFmu);
                    outputs.setRealValues(fmus[requestedFmu].states);
+                   std::cout << fmus[requestedFmu].currentTime << " Outputs: " << outputs << "\n";
                    //send the new values to the client:
                    noFS.sendOutputValues(requestedFmu,fmus[requestedFmu].currentTime, outputs);
                    break;

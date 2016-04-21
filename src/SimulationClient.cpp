@@ -212,7 +212,7 @@ namespace NetOff
         return _outputMessages[simId].getContainer();
     }
 
-    ValueContainer& SimulationClient::initializeSimulation(const int& simId, const VariableList& outputs, const VariableList& inputs, const double* inputsReal,
+    ValueContainer& SimulationClient::initializeSimulation(const int& simId, const VariableList& inputs, const VariableList& outputs, const double* inputsReal,
                                                            const int* inputsInt, const char* inputsBool)
     {
         _inputVarNames[simId] = inputs;
@@ -221,9 +221,18 @@ namespace NetOff
         _inputMessages[simId] = ValueContainerMessage<ClientMessageSpecifyer>(simId, inputs, ClientMessageSpecifyer::INPUTS);
         _outputMessages[simId] = ValueContainerMessage<ServerMessageSpecifyer>(simId, outputs, ServerMessageSpecifyer::OUTPUTS);
 
-        InitSimulationMessage initMessage(simId, inputs , outputs, inputsReal, inputsInt, inputsBool);
+        InitSimulationMessage initMessage(simId, inputs , outputs);
         this->sendInitialRequest(initMessage);
+        if(inputsReal != nullptr)
+            _inputMessages[simId].getContainer().setRealValues(inputsReal);
+        if(inputsInt != nullptr)
+            _inputMessages[simId].getContainer().setIntValues(inputsInt);
+        if(inputsBool != nullptr)
+            _inputMessages[simId].getContainer().setBoolValues(inputsBool);
+        _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
+        send(simId);
         _isInitialized[simId] = recv(simId, 0.0,ServerMessageSpecifyer::SUCCESS_SIM_INIT);
+        _isInitialized[simId] = true;
         return _outputMessages[simId].getContainer();
     }
 }

@@ -226,16 +226,13 @@ namespace NetOff
         _outputVarNames[_lastSimId] = initMessage.getOutputs();
 
         _inputMessages[_lastSimId] = ValueContainerMessage<ClientMessageSpecifyer>(_lastSimId, _inputVarNames[_lastSimId], ClientMessageSpecifyer::INPUTS);
-        _outputMessages[_lastSimId] = ValueContainerMessage<ServerMessageSpecifyer>(_lastSimId, _inputVarNames[_lastSimId], ServerMessageSpecifyer::OUTPUTS);
+        _outputMessages[_lastSimId] = ValueContainerMessage<ServerMessageSpecifyer>(_lastSimId, _outputVarNames[_lastSimId], ServerMessageSpecifyer::OUTPUTS);
+
+        if(_lastSimId != this->recvMessage())
+            throw std::runtime_error("SimulationServer: Internal error occured. Received initial values invalid.");
 
         _isInitialized[_lastSimId] = true;
 
-        if (initMessage.getReals() != nullptr)
-            _inputMessages[_lastSimId].getContainer().setRealValues(initMessage.getReals());
-        if (initMessage.getInts() != nullptr)
-            _inputMessages[_lastSimId].getContainer().setIntValues(initMessage.getInts());
-        if (initMessage.getBools() != nullptr)
-            _inputMessages[_lastSimId].getContainer().setBoolValues(initMessage.getBools());
     }
 
     bool SimulationServer::sendMessage(const int& simId)

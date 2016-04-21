@@ -7,6 +7,7 @@
 
 #include "../../include/network_impl/NetworkClient.hpp"
 
+#include <iostream>
 namespace NetOff
 {
 
@@ -24,16 +25,18 @@ namespace NetOff
         IPaddress ip;
 
         unsigned times = 0;
-        while (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1 && times++ <= _numMaxSleeps)
+        SDLNet_ResolveHost(&ip, host.c_str(), port);
+        do
         {
             SDL_Delay(_sleepTime);
-        }
+            _socket = SDLNet_TCP_Open(&ip);
+
+        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && times++ <= _numMaxSleeps);
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
             return false;
         }
 
-        _socket = SDLNet_TCP_Open(&ip);
         if (_socket == nullptr)
         {
             return false;

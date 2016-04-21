@@ -29,8 +29,8 @@ int clientFunc(const std::string & hostname, int port)
 
        // set the input variables to send (in this case just the first variable of all fmu variables)
        NetOff::VariableList inputVars;
-       inputVars.addReal(all.getReals()[0]);
-       inputVars.addReal(all.getReals()[1]);
+       inputVars.addReal(all.getReals()[2]);
+       inputVars.addReal(all.getReals()[3]);
        double inputValue[] = {0.0,0.0};
        // set the output variables, which should be received (in this case all fmu variables)
        NetOff::VariableList outputVars;
@@ -38,7 +38,7 @@ int clientFunc(const std::string & hostname, int port)
 
        noFC.initializeSimulation(funFmu,inputVars,outputVars,inputValue,nullptr, nullptr);
        NetOff::ValueContainer & data = noFC.getOutputValueContainer(funFmu);
-       //std::cout << "Initial data: " << data << "\n";
+
        // start the server
        if (!noFC.start())
            throw std::runtime_error("Couldn't start important server.");
@@ -59,9 +59,9 @@ int clientFunc(const std::string & hostname, int port)
 
            NetOff::ValueContainer & inputs = noFC.getInputValueContainer(funFmu);
            // set inputs
-           inputs.getRealValues()[0] += 1.0;
-           inputs.getRealValues()[1] += 0.5;
-
+           inputs.getRealValues()[0] = std::sin(t);
+           inputs.getRealValues()[1] = std::cos(t);
+           std::cout << "inputs: " << inputs << "\n";
            // send inputs
            noFC.sendInputValues(funFmu, t, inputs);
 
@@ -69,7 +69,7 @@ int clientFunc(const std::string & hostname, int port)
            NetOff::ValueContainer & outputs = noFC.recvOutputValues(funFmu, t);  // Don't worry. The won't be any data allocated. And the reference '&' is a must. It's not allowed to be copied
 
            // do something with outputs
-           std::cout << "At time " << t << ":\n" << outputs << "\n";
+           std::cout << "At time " << t << ": " << outputs << "\n";
 
            t += 0.1;
        }
