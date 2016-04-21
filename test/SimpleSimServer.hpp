@@ -8,7 +8,7 @@
 #ifndef TEST_SIMPLESIMSERVER_HPP_
 #define TEST_SIMPLESIMSERVER_HPP_
 
-#include "../include/SimulationServer.hpp"
+#include <SimulationServer.hpp>
 
 struct PseudoFmu
 {

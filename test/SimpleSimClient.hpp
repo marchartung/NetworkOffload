@@ -11,7 +11,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "../include/SimulationClient.hpp"
+
+#include <SimulationClient.hpp>
 
 int clientFunc(const std::string & hostname, int port)
 {
