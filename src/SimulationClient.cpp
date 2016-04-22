@@ -7,8 +7,9 @@
 
 #include "../include/SimulationClient.hpp"
 
-#include "../include/messages.hpp"
+#include "../include/messages/messages.hpp"
 #include "../include/network_impl/SimNetworkFunctions.hpp"
+#include <stdexcept>
 
 namespace NetOff
 {

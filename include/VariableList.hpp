@@ -10,6 +10,7 @@
 
 #include "AdditionalTypes.hpp"
 #include <iostream>
+#include <vector>
 
 namespace NetOff
 {

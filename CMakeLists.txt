@@ -50,5 +50,11 @@ add_executable(SimpleSim "test/SimpleSim.cpp")
 set_property(TARGET SimpleSim PROPERTY CXX_STANDARD 11)
 set_property(TARGET SimpleSim PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(SimpleSim ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff")
-
 install(TARGETS SimpleSim DESTINATION "example/NetOff")
+
+add_executable(NetOffBenchmark "test/NetOffBenchmark.cpp")
+set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD 11)
+set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET NetOffBenchmark PROPERTY BUILD_TYPE RELEASE)
+target_link_libraries(NetOffBenchmark ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff")
+install(TARGETS NetOffBenchmark DESTINATION "example/NetOffBenchmark")
