@@ -84,7 +84,7 @@ namespace NetOff
 
 
         const double & getLastReceivedTime(const int& simId) const;
-        int getLastFmuId() const;
+        int getLastSimId() const;
 
         bool sendOutputValues(const int & simId, const double & time, const ValueContainer & vals);
         ValueContainer & recvInputValues(const int & simId);

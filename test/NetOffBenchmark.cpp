@@ -70,7 +70,7 @@ int BenchServer(const int & port, const size_t & numStates) {
 			break;
 		}
 		case NetOff::InitialClientMessageSpecifyer::INIT_SIM: {
-			requestedFmu = noFS.getLastFmuId();
+			requestedFmu = noFS.getLastSimId();
 			NetOff::VariableList inputsVars = noFS.getInputVariables(
 					requestedFmu);
 			NetOff::VariableList outputVars = noFS.getOutputVariables(
@@ -112,7 +112,7 @@ int BenchServer(const int & port, const size_t & numStates) {
 		NetOff::ClientMessageSpecifyer spec = noFS.getClientRequest();
 		switch (spec) {
 		case NetOff::ClientMessageSpecifyer::INPUTS: {
-			requestedFmu = noFS.getLastFmuId();
+			requestedFmu = noFS.getLastSimId();
 			// when receiving inputs return the requested time step:
 			NetOff::ValueContainer & inputs = noFS.recvInputValues(
 					requestedFmu);

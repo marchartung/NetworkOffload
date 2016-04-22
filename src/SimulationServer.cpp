@@ -111,7 +111,7 @@ namespace NetOff
         return *_lastAddedSim;
     }
 
-    int SimulationServer::getLastFmuId() const
+    int SimulationServer::getLastSimId() const
     {
         return _lastSimId;
     }

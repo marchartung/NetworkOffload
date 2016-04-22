@@ -10,7 +10,7 @@
 
 #include <SimulationServer.hpp>
 
-struct PseudoFmu
+struct PseudoSim
 {
     double states[4] = { 0, 0, 0, 0 };
     double currentTime = 0;
@@ -43,40 +43,44 @@ int serverFunc(int port)
        if (!noFS.initializeConnection())
            throw std::runtime_error("Couldn't open server.");
 
-       std::vector<PseudoFmu> fmus;
+       std::vector<PseudoSim> sims;
 
        // now wait for initialization requests of a client:
        bool run = true;
        NetOff::InitialClientMessageSpecifyer spec;
-       int requestedFmu, newFmuId;
-       std::string newFmuName;
+       int requestedSim, newSimId;
+       std::string newSimName;
        std::vector<std::string> realVars;
        while (run)
        {
            spec = noFS.getInitialClientRequest();
            switch (spec)
            {
-               case NetOff::InitialClientMessageSpecifyer::ADD_SIM:
+               case NetOff::InitialClientMessageSpecifyer::ADD_SIM: // client called addSimulation(string str)
                {
-                   // to react on this message the server has to call getAddedFmu()
-                   std::tie(newFmuName, newFmuId) = noFS.getAddedSimulation();
-                   // check if the fmu exists
-                   if (newFmuName != "/home/of/very/funny/Fmu.fmu")
+            	   // newSim name is the str passed to the client function addSimulation
+                   std::tie(newSimName, newSimId) = noFS.getAddedSimulation(); // optional call
+                   // do for example some checks, here if the sim exists
+                   if (newSimName != "/home/of/very/funny/Sim.sim")
                    {
                        noFS.deinitialize();
                        return 1;
                    }
-                   // add fmu to calculation
-                   fmus.push_back(PseudoFmu());
-                   noFS.confirmSimulationAdd(newFmuId,fmus.back().vars);
+                   // add sim to calculation
+                   sims.push_back(PseudoSim());
+                   // confirm the clients request, as arguments you have to pass the id received by the client and the available vars of the simulation [newSimName]
+                   noFS.confirmSimulationAdd(newSimId,sims.back().vars);  // NON OPTIONAL CALL!!!!!!!!!!!!
                    break;
                }
-               case NetOff::InitialClientMessageSpecifyer::INIT_SIM:
+               case NetOff::InitialClientMessageSpecifyer::INIT_SIM: // client called initializeSimulation(id,inputs,outputs,initialReals,initialInts,initialBools)
                {
-                   requestedFmu = noFS.getLastFmuId();
-                   NetOff::VariableList inputsVars = noFS.getInputVariables(requestedFmu);
+            	   // with getLastSimId it's possible to access the simId the received request is pointing to
+                   requestedSim = noFS.getLastSimId(); // optional call
+                   // the input variables wished by the client can be now accessed with getInputVariables(id)
+                   // in this case now means, after the server received an INIT_SIM, it's save to access all containers regarding the given id
+                   NetOff::VariableList inputsVars = noFS.getInputVariables(requestedSim); // optional call
 
-                   //check if the variable names are known:
+                   //check if the variable names are known (for example):
                    for (size_t i = 0; i < inputsVars.getReals().size(); ++i)
                        if (!(inputsVars.getReals()[i] == "x" || inputsVars.getReals()[i] == "y" || inputsVars.getReals()[i] == "dx" || inputsVars.getReals()[i] == "dy"))
                        {
@@ -84,8 +88,8 @@ int serverFunc(int port)
                            noFS.deinitialize();
                            return 1;
                        }
-
-                   NetOff::VariableList outputVars = noFS.getOutputVariables(requestedFmu);
+                   // check outputs wished by the client (for example)
+                   NetOff::VariableList outputVars = noFS.getOutputVariables(requestedSim); // optional call
 
                    //check if the variable names are known:
                    for (size_t i = 0; i < outputVars.getReals().size(); ++i)
@@ -96,26 +100,26 @@ int serverFunc(int port)
                            return 1;
                        }
 
-                   NetOff::ValueContainer & inputVals = noFS.getInputValueContainer(requestedFmu);
-                   fmus[requestedFmu].init(inputVals.getRealValues());
+                   NetOff::ValueContainer & inputVals = noFS.getInputValueContainer(requestedSim);  // optional call
+                   sims[requestedSim].init(inputVals.getRealValues());
 
                    // everything is ok with the variable call confirmSimulationInit
-                   NetOff::ValueContainer & outputVals = noFS.getOutputValueContainer(requestedFmu);
-                   outputVals.setRealValues(fmus[requestedFmu].states);
-                   noFS.confirmSimulationInit(requestedFmu, outputVals);
+                   NetOff::ValueContainer & outputVals = noFS.getOutputValueContainer(requestedSim);  // optional call
+                   outputVals.setRealValues(sims[requestedSim].states);  // optional call
+                   noFS.confirmSimulationInit(requestedSim, outputVals); // NON OPTIONAL CALL!!!!!!!!!!!!
                    break;
                }
                case NetOff::InitialClientMessageSpecifyer::START:
                {
                    // notify client about a proper start up:
-                   noFS.confirmStart();
+                   noFS.confirmStart();  // NON OPTIONAL CALL!!!!!!!!!!!!
                    run = false;
                    break;
                }
                case NetOff::InitialClientMessageSpecifyer::CLIENT_INIT_ABORT:
                {
                    // shut down Server
-                   noFS.deinitialize();
+                   noFS.deinitialize();  // NON OPTIONAL CALL!!!!!!!!!!!!
                    return 0;
                }
                default:
@@ -133,45 +137,45 @@ int serverFunc(int port)
            {
                case NetOff::ClientMessageSpecifyer::INPUTS:
                {
-                   requestedFmu = noFS.getLastFmuId();
+                   requestedSim = noFS.getLastSimId(); // optional call
                    // when receiving inputs return the requested time step:
-                   NetOff::ValueContainer & inputs = noFS.recvInputValues(requestedFmu);
-                   std::cout << fmus[requestedFmu].currentTime << "  Inputs: " << inputs << "\n";
-                   // calc a new step: (for examplewith  the PseudoFmu)
-                   fmus[requestedFmu].solve(inputs.getRealValues(), noFS.getLastReceivedTime(requestedFmu));
+                   NetOff::ValueContainer & inputs = noFS.recvInputValues(requestedSim);  // optional call
+                   std::cout << sims[requestedSim].currentTime << "  Inputs: " << inputs << "\n";
+                   // calc a new step: (for examplewith  the PseudoSim)
+                   sims[requestedSim].solve(inputs.getRealValues(), noFS.getLastReceivedTime(requestedSim));
                    //set the states in the container:
-                   NetOff::ValueContainer & outputs = noFS.getOutputValueContainer(requestedFmu);
-                   outputs.setRealValues(fmus[requestedFmu].states);
-                   std::cout << fmus[requestedFmu].currentTime << " Outputs: " << outputs << "\n";
+                   NetOff::ValueContainer & outputs = noFS.getOutputValueContainer(requestedSim);  // optional call
+                   outputs.setRealValues(sims[requestedSim].states);
+                   std::cout << sims[requestedSim].currentTime << " Outputs: " << outputs << "\n";
                    //send the new values to the client:
-                   noFS.sendOutputValues(requestedFmu,fmus[requestedFmu].currentTime, outputs);
+                   noFS.sendOutputValues(requestedSim,sims[requestedSim].currentTime, outputs);  // NON OPTIONAL CALL!!!!!!!!!!!!
                    break;
                }
                case NetOff::ClientMessageSpecifyer::PAUSE:
                {
                    // pause a bit (1sec):
-                   noFS.confirmPause();
+                   noFS.confirmPause();  // NON OPTIONAL CALL!!!!!!!!!!!!
                    SDL_Delay(1000);
                    break;
                }
                case NetOff::ClientMessageSpecifyer::UNPAUSE:
                {
-                   noFS.confirmUnpause();
+                   noFS.confirmUnpause();  // NON OPTIONAL CALL!!!!!!!!!!!!
                    break;
                }
                case NetOff::ClientMessageSpecifyer::RESET:
                {
                    // go back to initial phase: (here not supported, server is just shutting down)
-                   noFS.confirmReset();
-                   // shut down Server
-                   noFS.deinitialize();
+                   noFS.confirmReset();  // NON OPTIONAL CALL!!!!!!!!!!!!
+                   // shut down Server because this is not supported in this example
+                   noFS.deinitialize();  // optional call
                    return 1;
                    break;
                }
                case NetOff::ClientMessageSpecifyer::CLIENT_ABORT:
                {
                    // shut down Server
-                   noFS.deinitialize();
+                   noFS.deinitialize();  // NON OPTIONAL CALL!!!!!!!!!!!!
                    run = false;
                    break;
                }
