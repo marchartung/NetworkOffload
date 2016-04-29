@@ -2,7 +2,7 @@
  * StartMessage.cpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../../include/messages/RuntimeMessage.hpp"

@@ -2,7 +2,7 @@
  * FmuNetworkFunctions.hpp
  *
  *  Created on: 08.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_NETWORK_IMPL_SIMNETWORKFUNCTIONS_HPP_

@@ -2,7 +2,7 @@
  * SimpleSim.cpp
  *
  *  Created on: 19.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include <string>

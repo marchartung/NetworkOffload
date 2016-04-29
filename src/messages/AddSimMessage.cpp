@@ -2,7 +2,7 @@
  * AddSimMessage.cpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../../include/messages/AddSimMessage.hpp"
@@ -65,17 +65,19 @@ namespace NetOff
     /////////AddSimRequestSuccessMessage//////////
     //////////////////////////////////////////////
 
-    AddSimSuccessMessage::AddSimSuccessMessage(const int & id, const VariableList & vars)
+    AddSimSuccessMessage::AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs)
             : AbstractMessage<InitialServerMessageSpecifyer>(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM),
               _dataSize(0)
 
     {
-        _dataSize = sizeof(InitialServerMessageSpecifyer) + sizeof(int) + vars.dataSize();
+        _dataSize = sizeof(InitialServerMessageSpecifyer) + sizeof(int) + inputs.dataSize() + outputs.dataSize();
         _data = std::shared_ptr<char>(new char[_dataSize]);
         char * p = _data.get();
         p = saveShiftIntegralInData(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM, p);
         p = saveShiftIntegralInData(id, p);
-        vars.saveVariablesTo(p);
+        inputs.saveVariablesTo(p);
+        p = shiftDataAccessable<VariableList>(inputs,p);
+        outputs.saveVariablesTo(p);
     }
 
     AddSimSuccessMessage::AddSimSuccessMessage(std::shared_ptr<char> & data)
@@ -105,9 +107,14 @@ namespace NetOff
         return *reinterpret_cast<int*>(shift<InitialServerMessageSpecifyer>(_data.get()));
     }
 
-    VariableList AddSimSuccessMessage::getVariableList() const
+    VariableList AddSimSuccessMessage::getInputVariableList() const
     {
         return VariableList::getVariableListFromData(shift<const int>(shift<const InitialServerMessageSpecifyer>(_data.get())));
+    }
+
+    VariableList AddSimSuccessMessage::getOutputVariableList() const
+    {
+        return VariableList::getVariableListFromData(shift<const int>(shiftDataAccessable<VariableList>(getInputVariableList(),shift<const InitialServerMessageSpecifyer>(_data.get()))));
     }
 
     std::string AddSimSuccessMessage::getPath()

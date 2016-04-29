@@ -2,7 +2,7 @@
  * AddSimMessage.hpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_MESSAGES_ADDSIMMESSAGE_HPP_
@@ -43,7 +43,7 @@ namespace NetOff
 
      public:
 
-        AddSimSuccessMessage(const int & id, const VariableList & vars);
+        AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs);
 
         AddSimSuccessMessage(std::shared_ptr<char> & data);
 
@@ -55,7 +55,9 @@ namespace NetOff
 
         const int & getSimId() const;
 
-        VariableList getVariableList() const;
+        VariableList getInputVariableList() const;
+
+        VariableList getOutputVariableList() const;
 
         std::string getPath();
      private:

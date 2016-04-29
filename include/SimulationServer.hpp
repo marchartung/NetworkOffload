@@ -2,7 +2,7 @@
  * NetworkOffloader.hpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_SIMULATIONSERVER_HPP_
@@ -52,11 +52,15 @@ namespace NetOff
 
         std::tuple<std::string,int> getAddedSimulation();
 
-        VariableList getInputVariables(const int & simId) const;
-        VariableList getOutputVariables(const int & simId) const;
+        std::string getSimulationFileName() const;
 
-        bool confirmSimulationAdd(const int & simId, const VariableList & varNames);
+        VariableList getSelectedInputVariables(const int & simId) const;
+        VariableList getSelectedOutputVariables(const int & simId) const;
+
+        bool confirmSimulationAdd(const int & simId, const VariableList & varNamePossibleInputs, const VariableList & varNamePossibleOutputs);
         bool confirmSimulationInit(const int & simId, const ValueContainer & initialOutputs);
+
+        bool confirmSimulationFile(const int & simId, const std::string & fileSrc);
 
         ValueContainer & getInputValueContainer(const int & simId);
         ValueContainer & getOutputValueContainer(const int & simId);
@@ -104,14 +108,16 @@ namespace NetOff
         std::vector<double> _lastReceivedTime;
         int _lastSimId;
 
+        std::string _lastSimulationFile;
 
         std::pair<const std::string,int> * _lastAddedSim;
 
         bool _handledLastRequest;
 
-        std::vector<VariableList> _varNames;
-        std::vector<VariableList> _inputVarNames;
-        std::vector<VariableList> _outputVarNames;
+        std::vector<VariableList> _allInputVarNames;
+        std::vector<VariableList> _allOutputVarNames;
+        std::vector<VariableList> _selectedInputVarNames;
+        std::vector<VariableList> _selectedOutputVarNames;
 
         std::vector<bool> _isInitialized;
 
@@ -132,6 +138,8 @@ namespace NetOff
         void prepareAddSim(std::shared_ptr<char> & data);
 
         void prepareInitSim(std::shared_ptr<char> & data);
+
+        void prepareSimulationFile(std::shared_ptr<char> & data);
 
         void prepareStart();
 

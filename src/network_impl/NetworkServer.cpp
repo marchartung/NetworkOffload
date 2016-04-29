@@ -2,7 +2,7 @@
  * NetworkServer.cpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../../include/network_impl/NetworkServer.hpp"

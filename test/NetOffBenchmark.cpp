@@ -2,7 +2,7 @@
  * NetOffBenchmark.cpp
  *
  *  Created on: 22.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include <SimulationClient.hpp>
@@ -74,14 +74,14 @@ int BenchServer(const int & port, const size_t & numStates)
 			}
 			// add fmu to calculation
 			fmus.push_back(BenchSim(numStates));
-			noFS.confirmSimulationAdd(newFmuId, fmus.back()._vars);
+			noFS.confirmSimulationAdd(newFmuId, fmus.back()._vars, fmus.back()._vars);
 			break;
 		}
 		case NetOff::InitialClientMessageSpecifyer::INIT_SIM:
 		{
 			requestedFmu = noFS.getLastSimId();
-			NetOff::VariableList inputsVars = noFS.getInputVariables(requestedFmu);
-			NetOff::VariableList outputVars = noFS.getOutputVariables(requestedFmu);
+			NetOff::VariableList inputsVars = noFS.getSelectedInputVariables(requestedFmu);
+			NetOff::VariableList outputVars = noFS.getSelectedOutputVariables(requestedFmu);
 
 			// initialize simulation:
 			fmus[requestedFmu]._numInputs = inputsVars.getReals().size();
@@ -197,7 +197,7 @@ int BenchClient(const std::string & hostname, int port, const size_t & numInputs
 		sims[i] = noFC.addSimulation("/home/of/very/funny/Fmu.fmu");
 
 		// checkout the variables of the fmu
-		NetOff::VariableList all = noFC.getVariableNames(sims[i]);
+		NetOff::VariableList all = noFC.getPossibleOuputVariableNames(sims[i]);
 		numStates = all.getReals().size();
 		// set the input variables to send (in this case just the first variable of all fmu variables)
 		NetOff::VariableList inputVars;
@@ -239,7 +239,7 @@ int BenchClient(const std::string & hostname, int port, const size_t & numInputs
 		{
 			// get outputs
 			NetOff::ValueContainer & outputsServer = noFC.recvOutputValues(sims[i], t);
-			std::copy(outputsServer.getRealValues(), outputsServer.getRealValues() + noFC.getVariableNames(sims[i]).getReals().size(), outputsClient.get());
+			std::copy(outputsServer.getRealValues(), outputsServer.getRealValues() + noFC.getPossibleOuputVariableNames(sims[i]).getReals().size(), outputsClient.get());
 		}
 		t += 0.1;
 	}

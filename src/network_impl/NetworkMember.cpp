@@ -2,7 +2,7 @@
  * NetworkClient.cpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../../include/network_impl/NetworkMember.hpp"
@@ -43,19 +43,21 @@ namespace NetOff
                 return false;
             }
         }
+
+        //std::cout << getChar() << " sending " << num << " bytes\n";
         return true;
     }
 
     bool NetworkMember::recv(char* buffer, const int & num)
     {
-        int numBits = -1;
+        int numBytes = -1;
         int i = 0;
         while (i < num)
         {
             unsigned partNum = std::min(num, i + _maxBuffer) - i;
-            numBits = SDLNet_TCP_Recv(_socket, &buffer[i], partNum);
-            if (numBits > 0)
-                i += numBits;
+            numBytes = SDLNet_TCP_Recv(_socket, &buffer[i], partNum);
+            if (numBytes > 0)
+                i += numBytes;
             else if (i == 0 && i < num)
             {
                 std::cout << "Connection recv fail.\n";
@@ -63,6 +65,7 @@ namespace NetOff
             }
 
         }
+        //std::cout << getChar() << " receiving " << num << " bytes\n";
         return true;
     }
 
@@ -74,12 +77,16 @@ namespace NetOff
         return send(buffer, num);
     }
 
-    std::shared_ptr<char> NetworkMember::variableRecv()
+    std::shared_ptr<char> NetworkMember::variableRecv(size_t * numBytes)
     {
         int num = 0;
         recv(reinterpret_cast<char*>(&num), sizeof(num));
         std::shared_ptr<char> res(new char[num]);
         recv(res.get(), num);
+        if (numBytes != nullptr)
+        {
+            *numBytes = num;
+        }
         return res;
     }
 

@@ -2,7 +2,7 @@
  * NetworkServer.hpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_NETWORK_IMPL_NETWORKSERVER_HPP_
@@ -25,6 +25,12 @@ namespace NetOff
         bool initialize(const int & port);
 
         void deinitialize() override;
+
+
+        virtual char getChar() const
+        {
+            return 'S';
+        }
 
      private:
         TCPsocket _tcpsock;

@@ -2,7 +2,7 @@
  * NetworkMember.hpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_NETWORK_IMPL_NETWORKMEMBER_HPP_
@@ -26,9 +26,11 @@ namespace NetOff
 
         bool variableSend(const char * buffer, const int & num);
 
-        std::shared_ptr<char> variableRecv();
+        std::shared_ptr<char> variableRecv(size_t * numBytes = nullptr);
 
         virtual void deinitialize() = 0;
+
+        virtual char getChar() const = 0;
 
      protected:
 

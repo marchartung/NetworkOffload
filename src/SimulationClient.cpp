@@ -2,7 +2,7 @@
  * SimulationClient.cpp
  *
  *  Created on: 08.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../include/SimulationClient.hpp"
@@ -73,10 +73,11 @@ namespace NetOff
         const int & simId = _pathToId.size();
 
         _pathToId[serverPathToSim] = simId;
-        _varNames.resize(simId + 1);
+        _possibleInputVarNames.resize(simId + 1);
+        _possibleOutputVarNames.resize(simId + 1);
 
-        _inputVarNames.resize(simId + 1);
-        _outputVarNames.resize(simId + 1);
+        _selectedInputVarNames.resize(simId + 1);
+        _selectedOutputVarNames.resize(simId + 1);
 
         _inputMessages.resize(simId + 1);
         _outputMessages.resize(simId + 1);
@@ -86,16 +87,64 @@ namespace NetOff
         sendInitialRequest(req);
         AddSimSuccessMessage varMessage(
                 recvInitialServerSuccess<AddSimSuccessMessage>(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM,
-                                                                      "SimulationClient: Couldn't initialize simulation."));
-        _varNames[simId] = varMessage.getVariableList();
+                                                               "SimulationClient: Couldn't initialize simulation."));
+        _possibleInputVarNames[simId] = varMessage.getInputVariableList();
+        _possibleOutputVarNames[simId] = varMessage.getOutputVariableList();
         return simId;
     }
 
-    VariableList SimulationClient::getVariableNames(const int & simId)
+    VariableList SimulationClient::getPossibleInputVariableNames(const int & simId)
     {
-        if (_currentState < CurrentState::INITED || simId >= _varNames.size())
+        if (_currentState < CurrentState::INITED || simId >= (long long int)_possibleInputVarNames.size())
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to get variables names before calling initialize(host,port).");
-        return _varNames[simId];
+        return _possibleInputVarNames[simId];
+    }
+
+    VariableList SimulationClient::getPossibleOuputVariableNames(const int & simId)
+    {
+        if (_currentState < CurrentState::INITED || simId >= (long long int)_possibleOutputVarNames.size())
+            throw std::runtime_error("ERROR: SimulationClient: It's not possible to get variables names before calling initialize(host,port).");
+        return _possibleOutputVarNames[simId];
+    }
+
+    ValueContainer& SimulationClient::initializeSimulation(const int& simId, const VariableList& inputs, const VariableList& outputs, const double* inputsReal,
+                                                           const int* inputsInt, const char* inputsBool)
+    {
+        _selectedInputVarNames[simId] = inputs;
+        if (!_selectedInputVarNames[simId].isSubsetOf(_possibleInputVarNames[simId]))
+            throw std::runtime_error("SimulationClient: Input variable names passed to initializeSimulation, which aren't supported by server.");
+        _selectedOutputVarNames[simId] = outputs;
+        if (!_selectedOutputVarNames[simId].isSubsetOf(_possibleOutputVarNames[simId]))
+            throw std::runtime_error("SimulationClient: Output variable names passed to initializeSimulation, which aren't supported by server.");
+
+        _inputMessages[simId] = ValueContainerMessage<ClientMessageSpecifyer>(simId, inputs, ClientMessageSpecifyer::INPUTS);
+        _outputMessages[simId] = ValueContainerMessage<ServerMessageSpecifyer>(simId, outputs, ServerMessageSpecifyer::OUTPUTS);
+
+        InitSimulationMessage initMessage(simId, inputs, outputs);
+        this->sendInitialRequest(initMessage);
+        if (inputsReal != nullptr)
+            _inputMessages[simId].getContainer().setRealValues(inputsReal);
+        if (inputsInt != nullptr)
+            _inputMessages[simId].getContainer().setIntValues(inputsInt);
+        if (inputsBool != nullptr)
+            _inputMessages[simId].getContainer().setBoolValues(inputsBool);
+        _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
+        send(simId);
+        _isInitialized[simId] = recv(simId, 0.0, ServerMessageSpecifyer::SUCCESS_SIM_INIT);
+        _isInitialized[simId] = true;
+        return _outputMessages[simId].getContainer();
+    }
+
+    std::string SimulationClient::getSimulationFile(const int & simId, const std::string & sourcePath, const std::string & targetPath)
+    {
+        std::string res;
+        GetFileMessage message(simId, sourcePath);
+        sendInitialRequest(message);
+        std::shared_ptr<size_t> numBytes(new size_t[1]);
+        std::shared_ptr<char> data = _netClient.variableRecv(numBytes.get());
+        GetFileSuccessMessage sucMessage(*numBytes, data, targetPath);
+
+        return res;
     }
 
     bool SimulationClient::start()
@@ -167,8 +216,28 @@ namespace NetOff
 
     bool SimulationClient::send(const int simId)
     {
-        _netClient.send(reinterpret_cast<const char *>(&_inputMessages[simId].getId()),sizeof(int)); //send id
+        _netClient.send(reinterpret_cast<const char *>(&_inputMessages[simId].getId()), sizeof(int));  //send id
         return _netClient.send(_inputMessages[simId].data(), _inputMessages[simId].dataSize());
+    }
+
+    const std::string& SimulationClient::getHostAddress() const
+    {
+        return _hostAddress;
+    }
+
+    void SimulationClient::setHostAddress(const std::string& hostAddress)
+    {
+        _hostAddress = hostAddress;
+    }
+
+    int SimulationClient::getPort() const
+    {
+        return _port;
+    }
+
+    void SimulationClient::setPort(int port)
+    {
+        _port = port;
     }
 
     bool SimulationClient::recv(const int simId, const double & expectedTime, const ServerMessageSpecifyer & spec)
@@ -182,7 +251,7 @@ namespace NetOff
         if (_currentState < CurrentState::STARTED)
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to receive outputs before calling start().");
 
-        recv(simId, time,ServerMessageSpecifyer::OUTPUTS);
+        recv(simId, time, ServerMessageSpecifyer::OUTPUTS);
         return _outputMessages[simId].getContainer();
     }
 
@@ -210,30 +279,6 @@ namespace NetOff
     {
         if (!_isInitialized[simId] || _currentState < CurrentState::INITED)
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to get a out container before calling initializeSimulation().");
-        return _outputMessages[simId].getContainer();
-    }
-
-    ValueContainer& SimulationClient::initializeSimulation(const int& simId, const VariableList& inputs, const VariableList& outputs, const double* inputsReal,
-                                                           const int* inputsInt, const char* inputsBool)
-    {
-        _inputVarNames[simId] = inputs;
-        _outputVarNames[simId] = outputs;
-
-        _inputMessages[simId] = ValueContainerMessage<ClientMessageSpecifyer>(simId, inputs, ClientMessageSpecifyer::INPUTS);
-        _outputMessages[simId] = ValueContainerMessage<ServerMessageSpecifyer>(simId, outputs, ServerMessageSpecifyer::OUTPUTS);
-
-        InitSimulationMessage initMessage(simId, inputs , outputs);
-        this->sendInitialRequest(initMessage);
-        if(inputsReal != nullptr)
-            _inputMessages[simId].getContainer().setRealValues(inputsReal);
-        if(inputsInt != nullptr)
-            _inputMessages[simId].getContainer().setIntValues(inputsInt);
-        if(inputsBool != nullptr)
-            _inputMessages[simId].getContainer().setBoolValues(inputsBool);
-        _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
-        send(simId);
-        _isInitialized[simId] = recv(simId, 0.0,ServerMessageSpecifyer::SUCCESS_SIM_INIT);
-        _isInitialized[simId] = true;
         return _outputMessages[simId].getContainer();
     }
 }

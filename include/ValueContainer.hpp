@@ -2,7 +2,7 @@
  * ValueContainer.hpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_VALUECONTAINER_HPP_

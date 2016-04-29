@@ -2,7 +2,7 @@
  * AbortMessage.hpp
  *
  *  Created on: 19.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_MESSAGES_ABORTMESSAGE_HPP_

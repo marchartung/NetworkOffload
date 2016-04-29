@@ -2,14 +2,11 @@
  * FmuServer.hpp
  *
  *  Created on: 08.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../include/SimulationServer.hpp"
-#include "../include/messages/InitSimulationMessage.hpp"
-#include "../include/messages/RuntimeMessage.hpp"
-#include "../include/messages/AddSimMessage.hpp"
-
+#include "../include/messages/messages.hpp"
 
 namespace NetOff
 {
@@ -88,6 +85,9 @@ namespace NetOff
             case InitialClientMessageSpecifyer::INIT_SIM:
                 prepareInitSim(data);
                 break;
+            case InitialClientMessageSpecifyer::GET_FILE:
+                prepareSimulationFile(data);
+                break;
             case InitialClientMessageSpecifyer::START:
                 prepareStart();
                 break;
@@ -116,28 +116,30 @@ namespace NetOff
         return _lastSimId;
     }
 
-    VariableList SimulationServer::getInputVariables(const int& simId) const
+    VariableList SimulationServer::getSelectedInputVariables(const int& simId) const
     {
-        if (_inputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= _inputVarNames.size())
+        if (_selectedInputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= (long long int) _selectedInputVarNames.size())
             throw std::runtime_error("ERROR: SimulationServer: Input container can't be returned. The simulation hasn't been initialized.");
-        return _inputVarNames[simId];
+        return _selectedInputVarNames[simId];
     }
 
-    VariableList SimulationServer::getOutputVariables(const int& simId) const
+    VariableList SimulationServer::getSelectedOutputVariables(const int& simId) const
     {
-        if (_outputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= _outputVarNames.size())
+        if (_selectedOutputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= (long long int) _selectedOutputVarNames.size())
             throw std::runtime_error("ERROR: SimulationServer: Output container can't be returned. The simulation hasn't been initialized.");
-        return _outputVarNames[simId];
+        return _selectedOutputVarNames[simId];
     }
 
-    bool SimulationServer::confirmSimulationAdd(const int& simId, const VariableList& varNames)
+    bool SimulationServer::confirmSimulationAdd(const int& simId, const VariableList& varNamePossibleInputs, const VariableList & varNamePossibleOutputs)
     {
         if (!_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::ADD_SIM)
         {
             throw std::runtime_error("SimulationServer: Cannot send variable names.");
         }
-        _varNames[simId] = varNames;
-        AddSimSuccessMessage answer(simId, varNames);
+        _allInputVarNames[simId] = varNamePossibleInputs;
+        _allOutputVarNames[simId] = varNamePossibleOutputs;
+
+        AddSimSuccessMessage answer(simId, varNamePossibleInputs, varNamePossibleOutputs);
         sendInitialRequest(answer);
         _handledLastRequest = true;
         return true;
@@ -153,6 +155,16 @@ namespace NetOff
         _handledLastRequest = true;
 
         return sendMessage(simId);
+    }
+
+    bool SimulationServer::confirmSimulationFile(const int & simId, const std::string & fileSrc)
+    {
+        if (_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::GET_FILE)
+            throw std::runtime_error("SimulationServer: Cannot confirm simulation file.");
+        GetFileSuccessMessage message(simId,fileSrc);
+        GetFileSuccessMessage test(message.dataSize(),message.shared(),"/home/hartung/test.txt");
+        _handledLastRequest = true;
+        return sendInitialRequest(message);
     }
 
     void SimulationServer::confirmStart()
@@ -208,13 +220,16 @@ namespace NetOff
         if (!it.second)
             throw std::runtime_error("SimulationServer: Fmu already added.");
         _lastAddedSim = &(*it.first);
-        _varNames.resize(simId + 1);
-        _inputVarNames.resize(simId + 1);
-        _outputVarNames.resize(simId + 1);
+
+        _allInputVarNames.resize(simId + 1);
+        _allOutputVarNames.resize(simId + 1);
+        _selectedInputVarNames.resize(simId + 1);
+        _selectedOutputVarNames.resize(simId + 1);
+
         _lastReceivedTime.resize(simId + 1, -1.0);
         _inputMessages.resize(simId + 1);
         _outputMessages.resize(simId + 1);
-        _isInitialized.resize(simId+1,false);
+        _isInitialized.resize(simId + 1, false);
     }
 
     void SimulationServer::prepareInitSim(std::shared_ptr<char>& data)
@@ -222,13 +237,15 @@ namespace NetOff
         InitSimulationMessage initMessage(data);
 
         _lastSimId = initMessage.getSimId();
-        _inputVarNames[_lastSimId] = initMessage.getInputs();
-        _outputVarNames[_lastSimId] = initMessage.getOutputs();
+        _selectedInputVarNames[_lastSimId] = initMessage.getInputs();
+        _selectedOutputVarNames[_lastSimId] = initMessage.getOutputs();
 
-        _inputMessages[_lastSimId] = ValueContainerMessage<ClientMessageSpecifyer>(_lastSimId, _inputVarNames[_lastSimId], ClientMessageSpecifyer::INPUTS);
-        _outputMessages[_lastSimId] = ValueContainerMessage<ServerMessageSpecifyer>(_lastSimId, _outputVarNames[_lastSimId], ServerMessageSpecifyer::OUTPUTS);
+        _inputMessages[_lastSimId] = ValueContainerMessage<ClientMessageSpecifyer>(_lastSimId, _selectedInputVarNames[_lastSimId],
+                                                                                   ClientMessageSpecifyer::INPUTS);
+        _outputMessages[_lastSimId] = ValueContainerMessage<ServerMessageSpecifyer>(_lastSimId, _selectedOutputVarNames[_lastSimId],
+                                                                                    ServerMessageSpecifyer::OUTPUTS);
 
-        if(_lastSimId != this->recvMessage())
+        if (_lastSimId != this->recvMessage())
             throw std::runtime_error("SimulationServer: Internal error occured. Received initial values invalid.");
 
         _isInitialized[_lastSimId] = true;
@@ -237,7 +254,7 @@ namespace NetOff
 
     bool SimulationServer::sendMessage(const int& simId)
     {
-        return _netServer.send(_outputMessages[simId].data(),_outputMessages[simId].dataSize());
+        return _netServer.send(_outputMessages[simId].data(), _outputMessages[simId].dataSize());
     }
 
     bool SimulationServer::sendOutputValues(const int& simId, const double& time, const ValueContainer& vals)
@@ -254,6 +271,18 @@ namespace NetOff
             std::runtime_error("SimulationServer: Couldn't recv output values. Error occured.");
         _handledLastRequest = true;
         return getInputValueContainer(simId);
+    }
+
+    void SimulationServer::prepareSimulationFile(std::shared_ptr<char>& data)
+    {
+        GetFileMessage message(data);
+        _lastSimulationFile = message.getFilePath();
+        _lastSimId = message.getSimId();
+    }
+
+    std::string SimulationServer::getSimulationFileName() const
+    {
+        return _lastSimulationFile;
     }
 
     void SimulationServer::prepareStart()

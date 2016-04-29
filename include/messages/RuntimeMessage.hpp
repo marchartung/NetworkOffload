@@ -2,7 +2,7 @@
  * StartMessage.hpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_MESSAGES_RUNTIMEMESSAGE_HPP_

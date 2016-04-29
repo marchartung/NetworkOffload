@@ -2,7 +2,7 @@
  * VariableList.cpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #include "../include/VariableList.hpp"
@@ -142,6 +142,28 @@ namespace NetOff
         }
         out << "]";
         return out;
+    }
+
+    bool VariableList::isSubsetOf(const VariableList& in) const
+    {
+    	bool abort = true;
+    	for(size_t i=0;i<_vars.size();++i)
+    	{
+    		for(const auto & str1 : _vars[i])
+    		{
+    	    	bool abort = true;
+    			for(const auto & str2 : in._vars[i])
+    				if(str1 == str2)
+    				{
+    					abort = false;
+    					break;
+    				}
+
+        		if(abort)
+        			return false;
+    		}
+    	}
+    	return true;
     }
 }
 

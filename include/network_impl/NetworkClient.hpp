@@ -2,7 +2,7 @@
  * NetworkClient.hpp
  *
  *  Created on: 07.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_NETWORK_IMPL_NETWORKCLIENT_HPP_
@@ -25,6 +25,11 @@ namespace NetOff
         bool initialize(const std::string & host, const int & port);
 
         void deinitialize();
+
+        virtual char getChar() const
+        {
+            return 'C';
+        }
     };
 
 } /* namespace NetOff */

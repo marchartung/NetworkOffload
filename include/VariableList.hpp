@@ -2,7 +2,7 @@
  * VariableList.hpp
  *
  *  Created on: 18.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef INCLUDE_VARIABLELIST_HPP_
@@ -43,6 +43,8 @@ namespace NetOff
         static VariableList getVariableListFromData(const char * data);
 
         friend std::ostream & operator<<(std::ostream & out, const VariableList & in);
+
+        bool isSubsetOf(const VariableList & in) const;
 
      private:
         std::vector<std::vector<std::string>> _vars;

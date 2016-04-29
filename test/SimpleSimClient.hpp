@@ -2,7 +2,7 @@
  * SimpleSimClient.hpp
  *
  *  Created on: 19.04.2016
- *      Author: hartung
+ *      Author: Marc Hartung
  */
 
 #ifndef TEST_SIMPLESIMCLIENT_HPP_
@@ -24,21 +24,23 @@ int clientFunc(const std::string & hostname, int port) {
 	int funSim = noFC.addSimulation("/home/of/very/funny/Sim.sim");
 
 	// checkout the variables of the sim
-	NetOff::VariableList all = noFC.getVariableNames(funSim);
+    NetOff::VariableList allInputs = noFC.getPossibleInputVariableNames(funSim);
+	NetOff::VariableList allOutputs = noFC.getPossibleOuputVariableNames(funSim);
 
 	// set the input variables to send (in this case just the 3rd,4th variable of all sim variables)
 	NetOff::VariableList inputVars;
-	inputVars.addReal(all.getReals()[2]); // add the 3rd variable
-	inputVars.addReal(all.getReals()[3]); // add the 4th variabl
+	inputVars.addReal(allInputs.getReals()[0]); // add the 1st variable
+	inputVars.addReal(allInputs.getReals()[1]); // add the 2d variable
 	double inputValue[] = { 0.0, 0.0 }; // for all inputs added inputs, the client needs to set initial values
 
 	// set the output variables, which should be received (in this case all sim variables)
 	NetOff::VariableList outputVars;
-	outputVars = all;
+	outputVars = allOutputs;
 
 	// initialize the added simulation:
 	noFC.initializeSimulation(funSim, inputVars, outputVars, inputValue,
 			nullptr, nullptr);
+	noFC.getSimulationFile(funSim,"./test_src.txt","./test_target.txt");
 
 	// no its possible to access the containers of the initialized simulation
 	NetOff::ValueContainer & data = noFC.getOutputValueContainer(funSim);
