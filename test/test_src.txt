@@ -1,0 +1,6 @@
+This is a test file.
+
+I hope the test will succeed.
+
+Best regards,
+Marc
