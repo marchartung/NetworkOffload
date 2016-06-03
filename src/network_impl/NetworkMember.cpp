@@ -8,6 +8,7 @@
 #include "../../include/network_impl/NetworkMember.hpp"
 
 #include <iostream>
+#include <algorithm>
 
 namespace NetOff
 {

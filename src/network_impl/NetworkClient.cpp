@@ -31,7 +31,7 @@ namespace NetOff
             SDL_Delay(_sleepTime);
             _socket = SDLNet_TCP_Open(&ip);
 
-        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && times++ <= _numMaxSleeps);
+        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int)_numMaxSleeps));
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
             return false;
