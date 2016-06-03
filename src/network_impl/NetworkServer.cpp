@@ -6,6 +6,7 @@
  */
 
 #include "../../include/network_impl/NetworkServer.hpp"
+#include <iostream>
 
 namespace NetOff
 {
@@ -25,15 +26,18 @@ namespace NetOff
     bool NetworkServer::initialize(const int& port)
     {
         IPaddress ip;
+		SDLNet_Init();
 
         if (SDLNet_ResolveHost(&ip, NULL, port) == -1)
         {
+			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
             return false;
         }
 
         _tcpsock = SDLNet_TCP_Open(&ip);
         if (!_tcpsock)
         {
+			std::cout<<"SDLNet_TCP_Open: "<< SDLNet_GetError()<<std::endl;
             return false;
         }
 
@@ -42,6 +46,7 @@ namespace NetOff
         while (_socket == NULL && times++ <= _numMaxSleeps)
         {
             SDL_Delay (_sleepTime);
+			std::cout << "wait for client on host " << ip.host << " and port " << port<<std::endl;
             _socket = SDLNet_TCP_Accept(_tcpsock);
         }
 
