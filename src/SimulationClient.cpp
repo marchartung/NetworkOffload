@@ -135,16 +135,23 @@ namespace NetOff
         return _outputMessages[simId].getContainer();
     }
 
-    std::string SimulationClient::getSimulationFile(const int & simId, const std::string & sourcePath, const std::string & targetPath)
+    bool SimulationClient::getSimulationFile(const int & simId, const std::string & sourcePath, const std::string & targetPath)
     {
-        std::string res;
-        GetFileMessage message(simId, sourcePath);
-        sendInitialRequest(message);
-        std::shared_ptr<size_t> numBytes(new size_t[1]);
-        std::shared_ptr<char> data = _netClient.variableRecv(numBytes.get());
-        GetFileSuccessMessage sucMessage(*numBytes, data, targetPath);
-
-        return res;
+        try {
+            GetFileMessage message(simId, sourcePath);
+            sendInitialRequest(message);
+            std::shared_ptr<size_t> numBytes(new size_t[1]);
+            // Receive file content.
+            std::shared_ptr<char> data = _netClient.variableRecv(numBytes.get());
+            // And store it in given target path.
+            GetFileSuccessMessage sucMessage(*numBytes, data, targetPath);
+        }
+        catch (std::runtime_error& ex)
+        {
+            std::cout << "Something went wrong in " << __FILE__ << " line " << __LINE__ << std::endl;
+            return false;
+        }
+        return true;
     }
 
     bool SimulationClient::start()
