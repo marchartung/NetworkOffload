@@ -20,14 +20,14 @@ int clientFunc(const std::string & hostname, int port) {
 	if (!noFC.initializeConnection())
 		throw std::runtime_error("Couldn't reach important server.");
 
-	// send server data about the sim u want to calculate and get a handle of the sim
+	// send server data about the sim you want to calculate and get a handle of the sim
 	int funSim = noFC.addSimulation("/home/of/very/funny/Sim.sim");
 
 	// checkout the variables of the sim
     NetOff::VariableList allInputs = noFC.getPossibleInputVariableNames(funSim);
 	NetOff::VariableList allOutputs = noFC.getPossibleOuputVariableNames(funSim);
 
-	// set the input variables to send (in this case just the 3rd,4th variable of all sim variables)
+	// set the input variables to send (in this case just the 1st and 2nd variable of all sim variables)
 	NetOff::VariableList inputVars;
 	inputVars.addReal(allInputs.getReals()[0]); // add the 1st variable
 	inputVars.addReal(allInputs.getReals()[1]); // add the 2d variable
@@ -42,7 +42,7 @@ int clientFunc(const std::string & hostname, int port) {
 			nullptr, nullptr);
 	noFC.getSimulationFile(funSim,"./test_src.txt","./test_target.txt");
 
-	// no its possible to access the containers of the initialized simulation
+	// now its possible to access the containers of the initialized simulation
 	NetOff::ValueContainer & data = noFC.getOutputValueContainer(funSim);
 
 	// start the server, only possible if all added simulations are initialized
@@ -55,7 +55,7 @@ int clientFunc(const std::string & hostname, int port) {
 		if (std::abs(t - 5.0) < 0.01) {
 			// pause for fun
 			noFC.pause();
-			//Do something else or just unpause again
+			// do something else or just unpause again
 			noFC.unpause();
 		}
 
