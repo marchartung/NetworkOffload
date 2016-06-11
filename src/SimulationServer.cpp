@@ -64,6 +64,7 @@ namespace NetOff
     void SimulationServer::deinitialize()
     {
         _netServer.deinitialize();
+        _currentState = CurrentState::NONE;
     }
 
     InitialClientMessageSpecifyer SimulationServer::getInitialClientRequest()
@@ -341,4 +342,10 @@ namespace NetOff
         _netServer.recv(_inputMessages[_lastSimId].data(), _inputMessages[_lastSimId].dataSize());
         return _lastSimId;
     }
+
+    bool SimulationServer::isActive() const
+    {
+        return _currentState != CurrentState::NONE;
+    }
 }
+

@@ -92,7 +92,7 @@ namespace NetOff
 
         bool sendOutputValues(const int & simId, const double & time, const ValueContainer & vals);
         ValueContainer & recvInputValues(const int & simId);
-
+        bool isActive() const;
 
      private:
         int _port;
