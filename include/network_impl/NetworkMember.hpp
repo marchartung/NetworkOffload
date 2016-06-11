@@ -8,7 +8,7 @@
 #ifndef INCLUDE_NETWORK_IMPL_NETWORKMEMBER_HPP_
 #define INCLUDE_NETWORK_IMPL_NETWORKMEMBER_HPP_
 
-#include <SDL2/SDL_net.h>
+#include <SDL_net.h>
 #include <memory>
 
 namespace NetOff

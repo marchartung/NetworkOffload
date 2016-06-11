@@ -217,6 +217,7 @@ namespace NetOff
         }
         int simId = message.getSimId();
         std::string fmuPath = message.getPath();
+		std::cout << "Got the simulation path: " << fmuPath <<std::endl;
         auto it = _pathToId.insert(std::make_pair(fmuPath, simId));
         if (!it.second)
             throw std::runtime_error("SimulationServer: Fmu already added.");
@@ -236,6 +237,7 @@ namespace NetOff
     void SimulationServer::prepareInitSim(std::shared_ptr<char>& data)
     {
         InitSimulationMessage initMessage(data);
+		std::cout << "Initialize" << std::endl;
 
         _lastSimId = initMessage.getSimId();
         _selectedInputVarNames[_lastSimId] = initMessage.getInputs();
@@ -276,6 +278,7 @@ namespace NetOff
 
     void SimulationServer::prepareSimulationFile(std::shared_ptr<char>& data)
     {
+		std::cout << "Prepare FMU " << std::endl;
         GetFileMessage message(data);
         _lastSimulationFile = message.getFilePath();
         _lastSimId = message.getSimId();

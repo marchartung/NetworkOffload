@@ -23,22 +23,34 @@ namespace NetOff
     bool NetworkClient::initialize(const std::string& host, const int& port)
     {
         IPaddress ip;
+		SDLNet_Init();
 
         unsigned times = 0;
-        SDLNet_ResolveHost(&ip, host.c_str(), port);
+
+		if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
+		{
+			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+			return false;
+		}
+
         do
         {
             SDL_Delay(_sleepTime);
             _socket = SDLNet_TCP_Open(&ip);
+			std::cout << "wait for server on host " << ip.host << " and port " << port << std::endl;
 
-        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && times++ <= _numMaxSleeps);
+        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int)_numMaxSleeps));
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
+			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+
             return false;
         }
 
         if (_socket == nullptr)
         {
+			std::cout << "no socket" << std::endl;
+
             return false;
         }
         return true;

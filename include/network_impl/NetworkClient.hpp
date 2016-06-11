@@ -9,6 +9,7 @@
 #define INCLUDE_NETWORK_IMPL_NETWORKCLIENT_HPP_
 
 #include "NetworkMember.hpp"
+#include <string>
 
 namespace NetOff
 {
@@ -22,7 +23,7 @@ namespace NetOff
 
         ~NetworkClient();
 
-        bool initialize(const std::string & host, const int & port);
+		bool initialize(const std::string & host, const int & port);
 
         void deinitialize();
 

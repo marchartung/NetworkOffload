@@ -9,6 +9,7 @@
 #define INCLUDE_MESSAGES_GETFILEMESSAGE_HPP_
 
 #include <fstream>
+#include <algorithm>
 
 #include "AbstractMessage.hpp"
 #include "../AdditionalTypes.hpp"

@@ -61,21 +61,33 @@ namespace NetOff
          */
         int addSimulation(const std::string & serverPathToSim);
 
-        std::string getSimulationFile(const int & simId, const std::string & sourcePath, const std::string & targetPath);
+        /** \brief Copies simulation file from remote server to localhost.
+         *
+         * @remark: This method can be used in a more general way to copy any desired file from
+         *          server to localhost;-)
+         *
+         * @param simId ID of the desired simulation.
+         * @param sourcePath File (with full path) on server.
+         * @param targetPath File (with full path) on localhost.
+         * @return True
+         *
+         * \todo: Always returns true. Implement error handling.
+         */
+        bool getSimulationFile(const int & simId, const std::string & sourcePath, const std::string & targetPath);
 
         VariableList getPossibleInputVariableNames(const int & simId);
 
         VariableList getPossibleOuputVariableNames(const int & simId);
         /**
          * \brief Initializes the variables the server should provide for the given .
-         *  The function takes the simulation ID, the identifyer for the inputs variables and the identifyer for the output variables.
+         *  The function takes the simulation ID, the identifier for the inputs variables and the identifier for the output variables.
          *  Optional it's possible to send initial values for the input values. All value indices are similar to the indices of the variables in the VariableLists
          *  @arg simId The simulation ID returned by addSimulation
          *  @arg inputs VariableList containing all variables the client sends to the server. The order determines the order in the input ValueContainer.
          *  @arg outputs VariableList containing all variables the client receives from the server. The order determines the order in the output ValueContainer.
          *  @arg inputsReal A double pointer to the initial values of the real variables. This argument is optional.
          *  @arg inputsInt A integer pointer to the initial values of the integer variables. This argument is optional.
-         *  @arg inputsBool A char pointer to the initial values of the bool variables. Theres no native correct way to present bools in memory, so they are presented as chars. This argument is optional.
+         *  @arg inputsBool A char pointer to the initial values of the bool variables. There's no native correct way to present bools in memory, so they are presented as chars. This argument is optional.
          *  @return Returns the initial values of the simulation. Most times needed for setting up the client functionality
          */
         ValueContainer & initializeSimulation(const int & simId, const VariableList & inputs, const VariableList & outputs, const double * inputsReal = nullptr,

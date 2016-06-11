@@ -8,6 +8,7 @@
 #include <SimulationClient.hpp>
 #include <SimulationServer.hpp>
 #include <chrono>
+#include <algorithm>
 
 struct BenchSim
 {

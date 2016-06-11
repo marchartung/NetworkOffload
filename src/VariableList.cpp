@@ -7,6 +7,9 @@
 
 #include "../include/VariableList.hpp"
 #include "../include/network_impl/SimNetworkFunctions.hpp"
+#include <ostream>
+#include <string>
+
 namespace NetOff
 {
     void VariableList::addReal(const std::string& varName)
