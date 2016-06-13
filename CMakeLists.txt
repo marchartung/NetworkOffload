@@ -22,7 +22,8 @@ endif(NOT(SDL2_NET_FOUND))
 
 file(GLOB_RECURSE SRCS "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
-include_directories("${PROJECT_SOURCE_DIR}/include" ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS})
+SET(NETOFF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include" ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS})
+include_directories(NETOFF_INCLUDE_DIRS)
 
 add_library( netoff SHARED ${SRCS} )
 target_link_libraries(netoff ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES})
