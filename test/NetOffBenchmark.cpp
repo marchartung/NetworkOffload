@@ -5,8 +5,8 @@
  *      Author: Marc Hartung
  */
 
-#include <SimulationClient.hpp>
-#include <SimulationServer.hpp>
+#include "../include/SimulationClient.hpp"
+#include "../include/SimulationServer.hpp"
 #include <chrono>
 #include <algorithm>
 

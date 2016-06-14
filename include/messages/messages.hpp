@@ -5,10 +5,10 @@
  *      Author: Marc Hartung
  */
 
-#include "messages/AbortMessage.hpp"
-#include "messages/AddSimMessage.hpp"
-#include "messages/InitSimulationMessage.hpp"
-#include "messages/RuntimeMessage.hpp"
-#include "messages/ValueContainerMessage.hpp"
-#include "messages/GetFileMessage.hpp"
+#include "AbortMessage.hpp"
+#include "AddSimMessage.hpp"
+#include "InitSimulationMessage.hpp"
+#include "RuntimeMessage.hpp"
+#include "ValueContainerMessage.hpp"
+#include "GetFileMessage.hpp"
 

@@ -8,7 +8,11 @@
 #ifndef INCLUDE_NETWORK_IMPL_NETWORKMEMBER_HPP_
 #define INCLUDE_NETWORK_IMPL_NETWORKMEMBER_HPP_
 
+#ifdef __linux__
+#include <SDL2/SDL_net.h>
+#else
 #include <SDL_net.h>
+#endif
 #include <memory>
 
 namespace NetOff

@@ -11,7 +11,7 @@
 #include <cmath>
 #include <iostream>
 
-#include <SimulationClient.hpp>
+#include "../include/SimulationClient.hpp"
 
 int clientFunc(const std::string & hostname, int port) {
 	NetOff::SimulationClient noFC(hostname, port);

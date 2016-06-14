@@ -8,7 +8,7 @@
 #ifndef TEST_SIMPLESIMSERVER_HPP_
 #define TEST_SIMPLESIMSERVER_HPP_
 
-#include <SimulationServer.hpp>
+#include "../include/SimulationServer.hpp"
 
 #include <fstream>
 
