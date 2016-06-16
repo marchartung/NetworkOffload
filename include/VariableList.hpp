@@ -14,6 +14,10 @@
 
 namespace NetOff
 {
+    /*! \brief
+     *
+     * todo Marc!
+     */
     class VariableList : public SharedDataAccessable
     {
      public:
@@ -22,14 +26,47 @@ namespace NetOff
 
         VariableList(const std::vector<std::string> & realVars, const std::vector<std::string> & intVars, const std::vector<std::string> & boolVars);
 
+        /*! \brief Adds a real variable to the container.
+         *
+         * @param varName Name of the variable.
+         */
         void addReal(const std::string & varName);
+
+        /*! \brief Adds a integer variable to the container.
+         *
+         * @param varName Name of the variable.
+         */
         void addInt(const std::string & varName);
+
+        /*! \brief Adds a boolean variable to the container.
+         *
+         * @param varName Name of the variable.
+         */
         void addBool(const std::string & varName);
+
+        /*! \brief Adds a vector of real variables to the container.
+         *
+         * @param varNames Vector of the variable names.
+         */
+        void addReals(const std::vector<std::string> & varNames);
+
+        /*! \brief Adds a vector of integer variables to the container.
+         *
+         * @param varNames Vector of the variable names.
+         */
+        void addInts(const std::vector<std::string> & varNames);
+
+        /*! \brief Adds a vector of boolean variables to the container.
+         *
+         * @param varNames Vector of the variable names.
+         */
+        void addBools(const std::vector<std::string> & varNames);
 
         const std::vector<std::string> & getReals() const;
         const std::vector<std::string> & getInts() const;
         const std::vector<std::string> & getBools() const;
 
+        /*! \brief Returns true, if the container is empty. */
         bool empty() const;
 
         size_t dataSize() const;

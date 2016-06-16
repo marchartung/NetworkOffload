@@ -27,6 +27,21 @@ namespace NetOff
         _vars[2].push_back(varName);
     }
 
+    void VariableList::addReals(const std::vector<std::string>& varNames)
+    {
+        _vars[0].insert(_vars[0].end(), varNames.begin(), varNames.end());
+    }
+
+    void VariableList::addInts(const std::vector<std::string>& varNames)
+    {
+        _vars[1].insert(_vars[1].end(), varNames.begin(), varNames.end());
+    }
+
+    void VariableList::addBools(const std::vector<std::string>& varNames)
+    {
+        _vars[2].insert(_vars[2].end(), varNames.begin(), varNames.end());
+    }
+
     const std::vector<std::string>& VariableList::getReals() const
     {
         return _vars[0];
@@ -149,24 +164,24 @@ namespace NetOff
 
     bool VariableList::isSubsetOf(const VariableList& in) const
     {
-    	bool abort = true;
-    	for(size_t i=0;i<_vars.size();++i)
-    	{
-    		for(const auto & str1 : _vars[i])
-    		{
-    	    	bool abort = true;
-    			for(const auto & str2 : in._vars[i])
-    				if(str1 == str2)
-    				{
-    					abort = false;
-    					break;
-    				}
+        bool abort = true;
+        for (size_t i = 0; i < _vars.size(); ++i)
+        {
+            for (const auto & str1 : _vars[i])
+            {
+                bool abort = true;
+                for (const auto & str2 : in._vars[i])
+                    if (str1 == str2)
+                    {
+                        abort = false;
+                        break;
+                    }
 
-        		if(abort)
-        			return false;
-    		}
-    	}
-    	return true;
+                if (abort)
+                    return false;
+            }
+        }
+        return true;
     }
-}
 
+}  // End namespace
