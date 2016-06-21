@@ -24,16 +24,17 @@ file(GLOB_RECURSE SRCS "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 SET(NETOFF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include" ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS} PARENT_SCOPE)
 SET(NETOFF_INCLUDE_DIRS_INTERNAL "${PROJECT_SOURCE_DIR}/include" ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS})
-include_directories(NETOFF_INCLUDE_DIRS_INTERNAL)
 
 add_library( netoff SHARED ${SRCS} )
 target_link_libraries(netoff ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES})
+target_include_directories(netoff PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
 set_property(TARGET netoff PROPERTY CXX_STANDARD 11)
 set_property(TARGET netoff PROPERTY CXX_STANDARD_REQUIRED ON)
 
 
 add_library(netoffStatic STATIC ${SRCS})
 target_link_libraries(netoffStatic ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES})
+target_include_directories(netoffStatic PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
 set_property(TARGET netoffStatic PROPERTY CXX_STANDARD 11)
 set_property(TARGET netoffStatic PROPERTY CXX_STANDARD_REQUIRED ON)
 if(UNIX)
@@ -56,6 +57,7 @@ set(NETOFF_LIBRARIES ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff" PARENT_SCO
 set(NETOFF_LIBRARIES_INTERNAL ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff")
 
 target_link_libraries(SimpleSim ${NETOFF_LIBRARIES_INTERNAL})
+target_include_directories(SimpleSim PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
 install(TARGETS SimpleSim DESTINATION "example/NetOff")
 file(COPY "${PROJECT_SOURCE_DIR}/test/test_src.txt" DESTINATION ".")
 
@@ -64,4 +66,5 @@ set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD 11)
 set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET NetOffBenchmark PROPERTY BUILD_TYPE RELEASE)
 target_link_libraries(NetOffBenchmark ${NETOFF_LIBRARIES_INTERNAL})
+target_include_directories(NetOffBenchmark PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
 install(TARGETS NetOffBenchmark DESTINATION "example/NetOffBenchmark")
