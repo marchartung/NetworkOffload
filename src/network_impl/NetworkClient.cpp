@@ -8,49 +8,50 @@
 #include "../../include/network_impl/NetworkClient.hpp"
 
 #include <iostream>
+
 namespace NetOff
 {
 
     NetworkClient::NetworkClient()
             : NetworkMember()
     {
-
     }
 
     NetworkClient::~NetworkClient()
-    {}
+    {
+    }
 
-    bool NetworkClient::initialize(const std::string& host, const int& port)
+    bool NetworkClient::initialize(const std::string & host, const int & port)
     {
         IPaddress ip;
-		SDLNet_Init();
+        SDLNet_Init();
 
         unsigned times = 0;
 
-		if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
-		{
-			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
-			return false;
-		}
+        if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
+        {
+            std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+            return false;
+        }
 
         do
         {
             SDL_Delay(_sleepTime);
             _socket = SDLNet_TCP_Open(&ip);
-			std::cout << "wait for server on host " << ip.host << " and port " << port << std::endl;
+            std::cout << "Waiting for server on host " << ip.host << " and port " << port << " ..." << std::endl;
 
-        } while((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int)_numMaxSleeps));
+        }
+        while ((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int) _numMaxSleeps));
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
-			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+            std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
 
             return false;
         }
 
         if (_socket == nullptr)
         {
-			std::cout << "no socket" << std::endl;
-
+            std::cout << "no socket" << std::endl;
             return false;
         }
         return true;
