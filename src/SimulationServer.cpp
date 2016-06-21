@@ -150,7 +150,7 @@ namespace NetOff
     {
         if (_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::INIT_SIM
                 || initialOutputs.getSimId() != simId)
-            throw std::runtime_error("SimulationServer: Cannot confirm simulation intialization.");
+            throw std::runtime_error("SimulationServer: Cannot confirm simulation initialization.");
         _outputMessages[simId].setSpecifyer(ServerMessageSpecifyer::SUCCESS_SIM_INIT);
         _outputMessages[simId].setTime(0.0);
         _handledLastRequest = true;
@@ -213,14 +213,14 @@ namespace NetOff
         AddSimRequestMessage message(data);
         if (!message.testRequest(InitialClientMessageSpecifyer::ADD_SIM))
         {
-            throw std::runtime_error("SimulationServer: some how tried to add fmu, but the message was misinterpret.");
+            throw std::runtime_error("SimulationServer: some how tried to add FMU, but the message was misinterpret.");
         }
         int simId = message.getSimId();
         std::string fmuPath = message.getPath();
 		std::cout << "Got the simulation path: " << fmuPath <<std::endl;
         auto it = _pathToId.insert(std::make_pair(fmuPath, simId));
         if (!it.second)
-            throw std::runtime_error("SimulationServer: Fmu already added.");
+            throw std::runtime_error("SimulationServer: FMU already added.");
         _lastAddedSim = &(*it.first);
 
         _allInputVarNames.resize(simId + 1);
@@ -249,7 +249,7 @@ namespace NetOff
                                                                                     ServerMessageSpecifyer::OUTPUTS);
 
         if (_lastSimId != this->recvMessage())
-            throw std::runtime_error("SimulationServer: Internal error occured. Received initial values invalid.");
+            throw std::runtime_error("SimulationServer: Internal error occurred. Received initial values invalid.");
 
         _isInitialized[_lastSimId] = true;
 
@@ -271,7 +271,7 @@ namespace NetOff
     ValueContainer& SimulationServer::recvInputValues(const int & simId)
     {
         if (_handledLastRequest || _currentState < CurrentState::STARTED || ClientMessageSpecifyer::INPUTS != _lastSpec || _lastSimId != simId)
-            std::runtime_error("SimulationServer: Couldn't recv output values. Error occured.");
+            std::runtime_error("SimulationServer: Couldn't receive output values. Error occurred.");
         _handledLastRequest = true;
         return getInputValueContainer(simId);
     }
