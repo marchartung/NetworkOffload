@@ -22,7 +22,7 @@ namespace NetOff
     {
     }
 
-    SimulationClient::SimulationClient(const std::string& hostAddress, const int & port, const size_t & initialResponseTime)
+    SimulationClient::SimulationClient(const std::string & hostAddress, const int & port, const size_t & initialResponseTime)
             : _hostAddress(hostAddress),
               _port(port),
               _initialResponseTime(initialResponseTime),
@@ -107,8 +107,8 @@ namespace NetOff
         return _possibleOutputVarNames[simId];
     }
 
-    ValueContainer& SimulationClient::initializeSimulation(const int& simId, const VariableList& inputs, const VariableList& outputs, const double* inputsReal,
-                                                           const int* inputsInt, const char* inputsBool)
+    ValueContainer & SimulationClient::initializeSimulation(const int & simId, const VariableList & inputs, const VariableList & outputs, const double * inputsReal,
+                                                            const int * inputsInt, const char * inputsBool)
     {
         _selectedInputVarNames[simId] = inputs;
         if (!_selectedInputVarNames[simId].isSubsetOf(_possibleInputVarNames[simId]))
@@ -227,12 +227,12 @@ namespace NetOff
         return _netClient.send(_inputMessages[simId].data(), _inputMessages[simId].dataSize());
     }
 
-    const std::string& SimulationClient::getHostAddress() const
+    const std::string & SimulationClient::getHostAddress() const
     {
         return _hostAddress;
     }
 
-    void SimulationClient::setHostAddress(const std::string& hostAddress)
+    void SimulationClient::setHostAddress(const std::string & hostAddress)
     {
         _hostAddress = hostAddress;
     }
@@ -253,7 +253,7 @@ namespace NetOff
         return _outputMessages[simId].getTime() == expectedTime && _outputMessages[simId].getSpecifyer() == spec;
     }
 
-    ValueContainer & SimulationClient::recvOutputValues(const int& simId, const double& time)
+    ValueContainer & SimulationClient::recvOutputValues(const int & simId, const double & time)
     {
         if (_currentState < CurrentState::STARTED)
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to receive outputs before calling start().");

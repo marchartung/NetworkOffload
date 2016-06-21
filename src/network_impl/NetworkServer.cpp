@@ -23,21 +23,21 @@ namespace NetOff
         killSocket(_tcpsock);
     }
 
-    bool NetworkServer::initialize(const int& port)
+    bool NetworkServer::initialize(const int & port)
     {
         IPaddress ip;
-		SDLNet_Init();
+        SDLNet_Init();
 
         if (SDLNet_ResolveHost(&ip, NULL, port) == -1)
         {
-			std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+            std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
             return false;
         }
 
         _tcpsock = SDLNet_TCP_Open(&ip);
         if (!_tcpsock)
         {
-			std::cout<<"SDLNet_TCP_Open: "<< SDLNet_GetError()<<std::endl;
+            std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
             return false;
         }
 
@@ -45,8 +45,8 @@ namespace NetOff
         unsigned times = 0;
         while (_socket == NULL && times++ <= _numMaxSleeps)
         {
-            SDL_Delay (_sleepTime);
-			std::cout << "wait for client on host " << ip.host << " and port " << port<<std::endl;
+            SDL_Delay(_sleepTime);
+            std::cout << "Waiting for client on host " << ip.host << " and port " << port << "..." << std::endl;
             _socket = SDLNet_TCP_Accept(_tcpsock);
         }
 

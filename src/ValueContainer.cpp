@@ -24,12 +24,12 @@ namespace NetOff
     {
     }
 
-   /* ValueContainer::ValueContainer(const ValueContainer& in)
-    {
-        *this = in;
-    }*/
+    /* ValueContainer::ValueContainer(const ValueContainer& in)
+     {
+     *this = in;
+     }*/
 
-    ValueContainer::ValueContainer(ValueContainer&& in)
+    ValueContainer::ValueContainer(ValueContainer && in)
     {
         *this = std::move(in);
     }
@@ -46,47 +46,47 @@ namespace NetOff
     {
     }
 
-    void ValueContainer::setRealValues(const double* values)
+    void ValueContainer::setRealValues(const double * values)
     {
         std::copy(values, values + _numReal, _realData);
     }
 
-    void ValueContainer::setIntValues(const int* values)
+    void ValueContainer::setIntValues(const int * values)
     {
         std::copy(values, values + _numInt, _intData);
     }
 
-    void ValueContainer::setBoolValues(const char* values)
+    void ValueContainer::setBoolValues(const char * values)
     {
         std::copy(values, values + _numBool, _boolData);
     }
 
-    const double* ValueContainer::getRealValues() const
+    const double * ValueContainer::getRealValues() const
     {
         return _realData;
     }
 
-    const int* ValueContainer::getIntValues() const
+    const int * ValueContainer::getIntValues() const
     {
         return _intData;
     }
 
-    const char* ValueContainer::getBoolValues() const
+    const char * ValueContainer::getBoolValues() const
     {
         return _boolData;
     }
 
-    double* ValueContainer::getRealValues()
+    double * ValueContainer::getRealValues()
     {
         return _realData;
     }
 
-    int* ValueContainer::getIntValues()
+    int * ValueContainer::getIntValues()
     {
         return _intData;
     }
 
-    char* ValueContainer::getBoolValues()
+    char * ValueContainer::getBoolValues()
     {
         return _boolData;
     }
@@ -116,7 +116,7 @@ namespace NetOff
         return _id;
     }
 
-    char* ValueContainer::data()
+    char * ValueContainer::data()
     {
         return _dataPtr;
     }
@@ -135,7 +135,7 @@ namespace NetOff
         setPointers();
     }
 
-    ValueContainer::ValueContainer(const std::shared_ptr<char>& data, char* containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
+    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
             : _data(data),
               _dataPtr(containerStart),
               _numReal(numReals),
@@ -199,14 +199,14 @@ namespace NetOff
         _boolData = reinterpret_cast<char *>(_intData + _numInt);
     }
 
-    const char* ValueContainer::data() const
+    const char * ValueContainer::data() const
     {
         return _dataPtr;
     }
 
     size_t ValueContainer::calcDataSize() const
     {
-        return calcDataSize(_numReal,_numInt,_numBool);
+        return calcDataSize(_numReal, _numInt, _numBool);
     }
 
     size_t ValueContainer::calcDataSize(size_t numReal, size_t numInt, size_t numBool)
@@ -214,23 +214,18 @@ namespace NetOff
         return numReal * sizeof(double) + numInt * sizeof(int) + numBool * sizeof(char);
     }
 
-    ValueContainer& ValueContainer::operator =(ValueContainer&& vc)
+    ValueContainer & ValueContainer::operator=(ValueContainer && vc)
     {
         std::swap(_data, vc._data);
-
         std::swap(_dataSize, vc._dataSize);
-
         std::swap(_numReal, vc._numReal);
         std::swap(_numInt, vc._numInt);
         std::swap(_numBool, vc._numBool);
-
         std::swap(_data, vc._data);
         std::swap(_realData, vc._realData);
         std::swap(_intData, vc._intData);
         std::swap(_boolData, vc._boolData);
-
         std::swap(_id, vc._id);
-
         return *this;
     }
 }
