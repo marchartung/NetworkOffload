@@ -66,6 +66,11 @@ namespace NetOff
         const std::vector<std::string> & getInts() const;
         const std::vector<std::string> & getBools() const;
 
+        /*! Returns size of real container, i.e., number of stored real variable names. */
+        size_t sizeReals() const;
+        size_t sizeInts() const;
+        size_t sizeBools() const;
+
         /*! \brief Returns true, if the container is empty. */
         bool empty() const;
 
@@ -83,7 +88,13 @@ namespace NetOff
 
         bool isSubsetOf(const VariableList & in) const;
 
+        size_t findRealVariableNameIndex(const std::string & varName) const;
+
      private:
+        /*! _vars[0] = Vector containing names of real variables.
+         *  _vars[1] = Vector containing names of integer variables.
+         *  _vars[2] = Vector containing names of boolean variables.
+         */
         std::vector<std::vector<std::string>> _vars;
 
         VariableList(const std::shared_ptr<char> & data);

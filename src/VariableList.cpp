@@ -7,8 +7,10 @@
 
 #include "../include/VariableList.hpp"
 #include "../include/network_impl/SimNetworkFunctions.hpp"
+
 #include <ostream>
 #include <string>
+#include <algorithm>
 
 namespace NetOff
 {
@@ -184,4 +186,30 @@ namespace NetOff
         return true;
     }
 
+    size_t VariableList::sizeReals() const
+    {
+        return _vars[0].size();
+    }
+
+    size_t VariableList::sizeInts() const
+    {
+        return _vars[1].size();
+    }
+
+    size_t VariableList::sizeBools() const
+    {
+        return _vars[2].size();
+    }
+
+    size_t VariableList::findRealVariableNameIndex(const std::string& varName) const
+    {
+        size_t res = 0;
+        auto pos = std::find(_vars[0].begin(),_vars[0].end(),varName);
+        if(pos != _vars[0].end())
+            res = std::distance(_vars[0].begin(),pos);
+        return res;
+    }
+
 }  // End namespace
+
+
