@@ -101,14 +101,11 @@ namespace NetOff
     std::tuple<std::string, int> SimulationServer::getAddedSimulation()
     {
         if (_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::ADD_SIM)
-        {
             throw std::runtime_error("SimulationServer: Couldn't add FMU. Wrong function called.");
-        }
 
         if (_lastAddedSim == nullptr)
             throw std::runtime_error("SimulationServer: No FMU added jet.");
 
-        _handledLastRequest = true;
         return *_lastAddedSim;
     }
 
@@ -119,24 +116,23 @@ namespace NetOff
 
     VariableList SimulationServer::getSelectedInputVariables(const int & simId) const
     {
-        if (_selectedInputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= (long long int) _selectedInputVarNames.size())
-            throw std::runtime_error("ERROR: SimulationServer: Input container can't be returned. The simulation hasn't been initialized.");
+        if (_currentState < CurrentState::INITED || simId >= (long long int) _selectedInputVarNames.size())
+            throw std::runtime_error(std::string(__FILE__) + " " + std::to_string((int)__LINE__) + "ERROR: SimulationServer: Input container can't be returned. The simulation hasn't been initialized.");
         return _selectedInputVarNames[simId];
     }
 
     VariableList SimulationServer::getSelectedOutputVariables(const int & simId) const
     {
-        if (_selectedOutputVarNames[simId].empty() || _currentState < CurrentState::INITED || simId >= (long long int) _selectedOutputVarNames.size())
+        if (_currentState < CurrentState::INITED || simId >= (long long int) _selectedOutputVarNames.size())
             throw std::runtime_error("ERROR: SimulationServer: Output container can't be returned. The simulation hasn't been initialized.");
         return _selectedOutputVarNames[simId];
     }
 
     bool SimulationServer::confirmSimulationAdd(const int & simId, const VariableList & varNamePossibleInputs, const VariableList & varNamePossibleOutputs)
     {
-        if (!_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::ADD_SIM)
-        {
+        if (_handledLastRequest || _currentState < CurrentState::INITED || _lastInitSpec != InitialClientMessageSpecifyer::ADD_SIM)
             throw std::runtime_error("SimulationServer: Cannot send variable names.");
-        }
+
         _allInputVarNames[simId] = varNamePossibleInputs;
         _allOutputVarNames[simId] = varNamePossibleOutputs;
 
