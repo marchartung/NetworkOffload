@@ -46,7 +46,7 @@ namespace NetOff
         while (_socket == NULL && times++ <= _numMaxSleeps)
         {
             SDL_Delay(_sleepTime);
-            std::cout << "Waiting for client on host " << ip.host << " and port " << port << "..." << std::endl;
+            std::cout << "Waiting for client on host " << ip.host << " and port " << port << " ..." << std::endl;
             _socket = SDLNet_TCP_Accept(_tcpsock);
         }
 
