@@ -112,6 +112,8 @@ namespace NetOff
 
         bool sendInputValues(const int & simId, const double & time, const ValueContainer & vals);
 
+        bool isStarted() const;
+
      private:
 
         /////////////////////////////////////////

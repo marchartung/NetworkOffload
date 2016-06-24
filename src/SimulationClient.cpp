@@ -288,4 +288,9 @@ namespace NetOff
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to get a out container before calling initializeSimulation().");
         return _outputMessages[simId].getContainer();
     }
+
+    bool SimulationClient::isStarted() const
+    {
+        return _currentState == CurrentState::STARTED;
+    }
 }
