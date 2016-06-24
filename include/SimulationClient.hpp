@@ -54,10 +54,13 @@ namespace NetOff
 
         void setPort(int port);
 
-        /**
-         * \brief Adds fmu to the remote simulation
-         * The given path is send to the server. The server should initialize this FMU and can now response to further requests like getVariableNames().
-         * @return int ID of the added FMU
+        /** \brief Adds a FMU to the remote simulation.
+         *
+         * The given path is send to the server. The server tries to initialize the FMU and can
+         * now response to further requests like \ref getVariableNames().
+         *
+         * @param serverPathToSim Path and FMU file name.
+         * @return int ID of the FMU to add.
          */
         int addSimulation(const std::string & serverPathToSim);
 
