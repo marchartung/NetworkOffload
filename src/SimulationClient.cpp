@@ -18,7 +18,16 @@ namespace NetOff
             : _hostAddress(""),
               _port(-1),
               _initialResponseTime(1000),
-              _currentState(CurrentState::NONE)
+              _pathToId(),
+              _currentState(CurrentState::NONE),
+              _netClient(),
+              _possibleInputVarNames(),
+              _possibleOutputVarNames(),
+              _selectedInputVarNames(),
+              _selectedOutputVarNames(),
+              _isInitialized(),
+              _inputMessages(),
+              _outputMessages()
     {
     }
 
@@ -26,7 +35,16 @@ namespace NetOff
             : _hostAddress(hostAddress),
               _port(port),
               _initialResponseTime(initialResponseTime),
-              _currentState(CurrentState::NONE)
+              _pathToId(),
+              _currentState(CurrentState::NONE),
+              _netClient(),
+              _possibleInputVarNames(),
+              _possibleOutputVarNames(),
+              _selectedInputVarNames(),
+              _selectedOutputVarNames(),
+              _isInitialized(),
+              _inputMessages(),
+              _outputMessages()
     {
     }
 
