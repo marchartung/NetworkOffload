@@ -23,14 +23,15 @@ namespace NetOff
 
         ValueContainerMessage(const int & simId, const VariableList & vars, const Specifyer & spec)
                 : AbstractMessage<Specifyer>(spec),
+                  _data(std::shared_ptr<char>(new char[_dataSize])),
                   _dataSize(0),
                   _spec(nullptr),
                   _id(nullptr),
-                  _time(nullptr)
+                  _time(nullptr),
+                  _container()
         {
             _dataSize = sizeof(Specifyer) + sizeof(int) + sizeof(double)
                     + ValueContainer::calcDataSize(vars.getReals().size(), vars.getInts().size(), vars.getBools().size());
-            _data = std::shared_ptr<char>(new char[_dataSize]);
             char * p = _data.get();
             _spec = reinterpret_cast<Specifyer *>(p);
             p = saveShiftIntegralInData<Specifyer>(spec, p);
@@ -43,10 +44,12 @@ namespace NetOff
 
         ValueContainerMessage()
                 : AbstractMessage<Specifyer>(),
+                  _data(std::shared_ptr<char>(new char[_dataSize])),
                   _dataSize(0),
                   _spec(nullptr),
                   _id(nullptr),
-                  _time(nullptr)
+                  _time(nullptr),
+                  _container()
         {
 
         }
