@@ -22,6 +22,7 @@ namespace NetOff
      public:
         GetFileMessage(const int & simId, const std::string & file)
                 : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::GET_FILE),
+                  _data(nullptr),
                   _dataSize(0),
                   _req(nullptr),
                   _simId(nullptr),
@@ -36,7 +37,6 @@ namespace NetOff
             p = saveShiftIntegralInData<int>(simId, p);
             _path = p;
             saveStringInData(file,_path);
-
         }
 
         GetFileMessage(std::shared_ptr<char> & data)
@@ -97,6 +97,7 @@ namespace NetOff
      public:
         GetFileSuccessMessage(const int & simId, const std::string & file)
             : AbstractMessage<InitialServerMessageSpecifyer>(InitialServerMessageSpecifyer::SUCCESS_GET_FILE),
+              _data(nullptr),
               _dataSize(0),
               _req(nullptr),
               _simId(nullptr),
