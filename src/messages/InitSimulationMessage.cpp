@@ -12,6 +12,7 @@ namespace NetOff
 {
     InitSimulationMessage::InitSimulationMessage(const int& simId, const VariableList& inputs, const VariableList& outputs)
             : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::INIT_SIM),
+              _data(nullptr),
               _dataSize(0),
               _req(nullptr),
               _id(nullptr),

@@ -12,7 +12,8 @@ namespace NetOff
 {
 
     ValueContainer::ValueContainer()
-            : _dataPtr(nullptr),
+            : _data(nullptr),
+              _dataPtr(nullptr),
               _realData(nullptr),
               _intData(nullptr),
               _boolData(nullptr),
@@ -35,9 +36,16 @@ namespace NetOff
     }
 
     ValueContainer::ValueContainer(size_t numReals, size_t numInts, size_t numBools)
-            : _numReal(numReals),
+            : _data(nullptr),
+              _dataPtr(nullptr),
+              _realData(nullptr),
+              _intData(nullptr),
+              _boolData(nullptr),
+              _numReal(numReals),
               _numInt(numInts),
-              _numBool(numBools)
+              _numBool(numBools),
+              _dataSize(0),
+              _id(-1)
     {
         init();
     }
