@@ -17,9 +17,10 @@ namespace NetOff
     {
      public:
         AbstractMessage()
-     {
+                : req()
+        {
 
-     }
+        }
 
         AbstractMessage(const Specifyer & in)
                 : req(in)
