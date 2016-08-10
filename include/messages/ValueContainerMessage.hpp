@@ -45,14 +45,14 @@ namespace NetOff
 
         ValueContainerMessage()
                 : AbstractMessage<Specifyer>(),
-                  _data(std::shared_ptr<char>(new char[_dataSize])),
+                  _data(nullptr),
                   _dataSize(0),
                   _spec(nullptr),
                   _id(nullptr),
                   _time(nullptr),
                   _container()
         {
-
+            _data = std::shared_ptr<char>(new char[_dataSize]);
         }
 
         ValueContainer & getContainer()
