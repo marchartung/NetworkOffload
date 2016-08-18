@@ -18,6 +18,9 @@ namespace NetOff
      public:
         NetworkMember();
 
+        NetworkMember(const NetworkMember&) = delete;
+        NetworkMember& operator=(const NetworkMember&) = delete;
+
         virtual ~NetworkMember();
 
         bool send(const char * buffer, const int & num);

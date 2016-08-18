@@ -19,6 +19,7 @@ namespace NetOff
         NetworkServer();
 
         NetworkServer(const NetworkServer &) = delete;
+        NetworkServer& operator=(const NetworkServer &) = delete;
 
         virtual ~NetworkServer();
 
