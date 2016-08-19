@@ -54,6 +54,9 @@ namespace NetOff
             _path = p;
         }
 
+        GetFileMessage(const GetFileMessage& rhs) = delete;
+        GetFileMessage& operator=(const GetFileMessage& rhs) = delete;
+
         ~GetFileMessage()
         {
 

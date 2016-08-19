@@ -18,9 +18,6 @@ namespace NetOff
      public:
         NetworkMember();
 
-        NetworkMember(const NetworkMember&) = delete;
-        NetworkMember& operator=(const NetworkMember&) = delete;
-
         virtual ~NetworkMember();
 
         bool send(const char * buffer, const int & num);
@@ -40,8 +37,8 @@ namespace NetOff
         TCPsocket _socket;
 
         int _maxBuffer;
-        int _sleepTime;
-        int _numMaxSleeps;
+        unsigned int _sleepTime;
+        unsigned int _numMaxSleeps;
 
         static void killSocket(TCPsocket & socket);
     };
