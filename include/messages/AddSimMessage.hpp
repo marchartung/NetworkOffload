@@ -60,12 +60,12 @@ namespace NetOff
         VariableList getOutputVariableList() const;
 
         std::string getPath();
+
      private:
         std::shared_ptr<char> _data;
         size_t _dataSize;
     };
 
 }
-
 
 #endif /* INCLUDE_MESSAGES_ADDSIMMESSAGE_HPP_ */
