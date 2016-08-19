@@ -28,6 +28,8 @@ namespace NetOff
 
         ValueContainer(ValueContainer && in);
 
+        ValueContainer & operator=(ValueContainer && vc);
+
         ~ValueContainer();
 
         void setRealValues(const double * values);
@@ -53,11 +55,7 @@ namespace NetOff
 
         const char * data() const;
 
-        ValueContainer & operator=(ValueContainer && vc);
-        //ValueContainer & operator=(const ValueContainer & vc);
-
         friend std::ostream & operator<<(std::ostream & stream, const ValueContainer & container);
-
 
      private:
 

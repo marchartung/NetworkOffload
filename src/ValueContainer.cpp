@@ -25,16 +25,6 @@ namespace NetOff
     {
     }
 
-    /* ValueContainer::ValueContainer(const ValueContainer& in)
-     {
-     *this = in;
-     }*/
-
-    ValueContainer::ValueContainer(ValueContainer && in)
-    {
-        *this = std::move(in);
-    }
-
     ValueContainer::ValueContainer(size_t numReals, size_t numInts, size_t numBools)
             : _data(nullptr),
               _dataPtr(nullptr),
@@ -48,6 +38,41 @@ namespace NetOff
               _id(-1)
     {
         init();
+    }
+
+    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
+            : _data(data),
+              _dataPtr(containerStart),
+              _realData(nullptr),
+              _intData(nullptr),
+              _boolData(nullptr),
+              _numReal(numReals),
+              _numInt(numInts),
+              _numBool(numBools),
+              _dataSize(calcDataSize()),
+              _id(id)
+    {
+        setPointers();
+    }
+
+    ValueContainer::ValueContainer(ValueContainer && in)
+    {
+        *this = std::move(in);
+    }
+
+    ValueContainer & ValueContainer::operator=(ValueContainer && vc)
+    {
+        std::swap(_data, vc._data);
+        std::swap(_dataSize, vc._dataSize);
+        std::swap(_numReal, vc._numReal);
+        std::swap(_numInt, vc._numInt);
+        std::swap(_numBool, vc._numBool);
+        std::swap(_data, vc._data);
+        std::swap(_realData, vc._realData);
+        std::swap(_intData, vc._intData);
+        std::swap(_boolData, vc._boolData);
+        std::swap(_id, vc._id);
+        return *this;
     }
 
     ValueContainer::~ValueContainer()
@@ -143,18 +168,6 @@ namespace NetOff
         setPointers();
     }
 
-    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
-            : _data(data),
-              _dataPtr(containerStart),
-              _numReal(numReals),
-              _numInt(numInts),
-              _numBool(numBools),
-              _dataSize(calcDataSize()),
-              _id(id)
-    {
-        setPointers();
-    }
-
     void ValueContainer::reinit(size_t numReal, size_t numInt, size_t numBool)
     {
         std::shared_ptr<char> oldData = _data;
@@ -222,19 +235,4 @@ namespace NetOff
         return numReal * sizeof(double) + numInt * sizeof(int) + numBool * sizeof(char);
     }
 
-    ValueContainer & ValueContainer::operator=(ValueContainer && vc)
-    {
-        std::swap(_data, vc._data);
-        std::swap(_dataSize, vc._dataSize);
-        std::swap(_numReal, vc._numReal);
-        std::swap(_numInt, vc._numInt);
-        std::swap(_numBool, vc._numBool);
-        std::swap(_data, vc._data);
-        std::swap(_realData, vc._realData);
-        std::swap(_intData, vc._intData);
-        std::swap(_boolData, vc._boolData);
-        std::swap(_id, vc._id);
-        return *this;
-    }
 }
-
