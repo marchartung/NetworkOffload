@@ -59,7 +59,9 @@ namespace NetOff
 
         ~GetFileMessage()
         {
-
+            delete _path;
+            delete _simId;
+            delete _req;
         }
 
         int getSimId() const
@@ -160,6 +162,16 @@ namespace NetOff
                 count += curReadLength;
             }
             fileStream.close();
+        }
+
+        GetFileSuccessMessage(const GetFileSuccessMessage& rhs) = delete;
+        GetFileSuccessMessage& operator=(const GetFileSuccessMessage& rhs) = delete;
+
+        ~GetFileSuccessMessage()
+        {
+            delete _fileStart;
+            delete _simId;
+            delete _req;
         }
 
         char * data() override
