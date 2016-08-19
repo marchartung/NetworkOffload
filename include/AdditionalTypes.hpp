@@ -62,9 +62,7 @@ namespace NetOff
     class SharedDataAccessable
     {
      public:
-        virtual ~SharedDataAccessable()
-        {
-        }
+        virtual ~SharedDataAccessable() { }
         virtual std::shared_ptr<char> data() = 0;
         virtual std::shared_ptr<const char> data() const = 0;
         virtual size_t dataSize() const = 0;
