@@ -38,7 +38,6 @@ namespace NetOff
         SUCCESS_START = 14,
         SUCCESS_GET_FILE = 15,
         SERVER_INIT_ABORT = 16
-
     };
 
     enum ServerMessageSpecifyer
