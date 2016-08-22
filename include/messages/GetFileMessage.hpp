@@ -57,11 +57,9 @@ namespace NetOff
         GetFileMessage(const GetFileMessage& rhs) = delete;
         GetFileMessage& operator=(const GetFileMessage& rhs) = delete;
 
+        // Do not delete pointer members since they point to memory locations managed by smart pointers.
         ~GetFileMessage()
         {
-            delete _path;
-            delete _simId;
-            delete _req;
         }
 
         int getSimId() const
