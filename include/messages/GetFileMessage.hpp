@@ -57,9 +57,9 @@ namespace NetOff
         GetFileMessage(const GetFileMessage& rhs) = delete;
         GetFileMessage& operator=(const GetFileMessage& rhs) = delete;
 
-        // Do not delete pointer members since they point to memory locations managed by smart pointers.
         ~GetFileMessage()
         {
+            // Do not delete pointer members since they point to memory locations managed by smart pointers.
         }
 
         int getSimId() const
@@ -167,9 +167,7 @@ namespace NetOff
 
         ~GetFileSuccessMessage()
         {
-            delete _fileStart;
-            delete _simId;
-            delete _req;
+            // Do not delete pointer members since they point to memory locations managed by smart pointers.
         }
 
         char * data() override
