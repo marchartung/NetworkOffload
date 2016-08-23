@@ -53,6 +53,9 @@ add_executable(SimpleSim "test/SimpleSim.cpp")
 set_property(TARGET SimpleSim PROPERTY CXX_STANDARD 11)
 set_property(TARGET SimpleSim PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SimpleSim PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples")
+add_custom_command(TARGET SimpleSim PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                       "${CMAKE_CURRENT_SOURCE_DIR}/test/test_src.txt" "${CMAKE_BINARY_DIR}/examples")
 
 set(NETOFF_LIBRARIES ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff" )
 set(NETOFF_LIBRARIES_INTERNAL ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff")
@@ -60,7 +63,6 @@ set(NETOFF_LIBRARIES_INTERNAL ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} "netoff")
 target_link_libraries(SimpleSim ${NETOFF_LIBRARIES_INTERNAL})
 target_include_directories(SimpleSim PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
 install(TARGETS SimpleSim DESTINATION "example/NetOff")
-file(COPY "${PROJECT_SOURCE_DIR}/test/test_src.txt" DESTINATION "./examples")
 
 add_executable(NetOffBenchmark "test/NetOffBenchmark.cpp")
 set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD 11)
