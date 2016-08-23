@@ -3,11 +3,11 @@ A client/server interface for remote simulation and local visualization.
 
 Dependencies:
 
-    * SDL2 (https://www.libsdl.org/download-2.0.php) 
+..* SDL2 (https://www.libsdl.org/download-2.0.php) 
       -> tested with version 2.04
-    * SDL2_net (https://www.libsdl.org/projects/SDL_net/)
+..* SDL2_net (https://www.libsdl.org/projects/SDL_net/)
       -> tested with version 2.01
-    * CMake 3.10 or higher (cmake.org)
+..* CMake 3.10 or higher (cmake.org)
       
 Install:
   
