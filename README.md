@@ -26,3 +26,4 @@ Like most software projects NetworkOffloader uses some great ideas from other pe
   An example directory is created with a small server/client application called *SimpleSim* implementing NetOff. The sources are in the directory test of the source code. The *SimpleSim* application consists of two parts, the server and the client. The server is executed via `./SimpleSim 4444` whereas 4444 is a arbitrary chosen port. The client is started via `./SimpleSim 4444 localhost`.
 This can also be done in one single console as `./SimpleSim 4444 & ./SimpleSim 4444 localhost`.
 
+The application *NetOffBenchmark* provides scalability tests. It is executed via `./NetOffBenchmark server bench & ./NetOffBenchmark client bench localhost`.
