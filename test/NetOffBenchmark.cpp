@@ -266,80 +266,95 @@ int main(int argc, char * argv[])
 {
 	if (argc < 2)
 	{
-		std::cout << "Usage 1: ./SimpleSim client [numInputs]  [numRounds] [port] [servername]\n";
-		std::cout << "Usage 2: ./SimpleSim server [numStates] [port]\n";
+		std::cout << "Usage 1: ./NetOffBenchmark client [numInputs]  [numRounds] [port] [servername]\n";
+		std::cout << "Usage 2: ./NetOffBenchmark server [numStates] [port]\n";
 		std::cout << "If no servername is set, the program will start a server, otherwise a client.\n";
-		std::cout << "Usage 3: ./SimpleSim [client | server] bench will start a predefined scaling benchmark.\n";
+		std::cout << "Usage 3: ./NetOffBenchmark [client | server] bench will start a predefined scaling benchmark.\n";
 		return 0;
 	}
 	const size_t roundsPerTest = 10;
 	const size_t numRounds = 1000;
 	const size_t statesStart = 16;
 	const double percentInputs = 0.1;
+	const int port = 3009;
 	if (std::string(argv[1]) == std::string("client"))
 	{
 		if (std::string(argv[2]) == std::string("bench"))
 		{
-			size_t numRounds = 1000;
-
-			//////////////////////////////////////////////////////////////////////////////////////////////////
-			std::cout << "scale states with _" << numRounds << " rounds:\n";
-			size_t statesStart = 16;
-			std::cout << "numSims,numStates, numInputs, initTime, simTime/rounds, deinitTime\n";
+			///////////////////////////////////////// STATES SCALE ///////////////////////////////////////////
+			// Scales the number of states from 16 to 8192 for 16 input variables.                          //
+		    //////////////////////////////////////////////////////////////////////////////////////////////////
+			std::cout << "Scale states with _" << numRounds << " rounds:\n";
+			std::cout << "numSims, numStates, numInputs, initTime, simTime/rounds, deinitTime\n";
+			size_t stateIt = statesStart;
 			for (size_t i = 1; i <= roundsPerTest; ++i)
 			{
-				statesStart *= 2;
-				BenchClient(argv[3], 3009, 10, 1000, 1, true);
-			}
-			std::cout << "\n";
-			//////////////////////////////////////////////////////////////////////////////////////////////////
-			std::cout << "scale states with _" << numRounds << " rounds and 1000 states:\n";
-			std::cout << "numSims,numStates, numInputs, initTime, simTime/rounds, deinitTime\n";
-			for (size_t i = 1; i <= roundsPerTest; ++i)
-			{
-				BenchClient(argv[3], 3009, std::min((unsigned) (1000 * i * percentInputs), 1000u), 1000, 1, true);
+				BenchClient(argv[3], port, statesStart, numRounds, 1, true);
+				stateIt *= 2;
 			}
 			std::cout << "\n";
 
+			///////////////////////////////////////// INPUTES SCALE //////////////////////////////////////////
+			// Scales the number of input variables from 100 to 1000 using 1000 states.                     //
 			//////////////////////////////////////////////////////////////////////////////////////////////////
-			std::cout << "scale sims with _" << numRounds << " rounds and 1024 states:\n";
+			std::cout << "Scale input variables with _" << numRounds << " rounds and 1000 states:\n";
+			std::cout << "numSims,numStates, numInputs, initTime, simTime/rounds, deinitTime\n";
+			for (size_t i = 1; i <= roundsPerTest; ++i)
+			{
+				BenchClient(argv[3], port, std::min((unsigned) (1000 * i * percentInputs), 1000u), numRounds, 1, true);
+			}
+			std::cout << "\n";
+
+
+			///////////////////////////////////////// SIMULATION SCALE with CONSTANT LOAD ////////////////////
+			// Scales the number of simulations from 1 to 512 and the number of states from 1024 to 2. Thus,//
+			// the load per simulation is constant.                                                         //
+		    //////////////////////////////////////////////////////////////////////////////////////////////////
+			std::cout << "Scale sims with _" << numRounds << " rounds and 1024 states:\n";
 			std::cout << "numSims,numStates, numInputs, initTime, simTime/rounds, deinitTime\n";
 			size_t curSimNum = 1;
 			for (size_t i = 1; i <= roundsPerTest; ++i)
 			{
-				BenchClient(argv[3], 3009, 1, 1000u, curSimNum, true);
+				BenchClient(argv[3], port, 1, 1000u, curSimNum, true);
 				curSimNum *= 2;
 			}
+
 			return 0;
-		} else
+		}
+		else
 		{
 			size_t numInputs = std::stoi(argv[2]);
 			size_t numRounds = std::stoi(argv[3]);
 			int port = std::stoi(argv[4]);
 			return BenchClient(argv[5], port, numInputs, numRounds);
 		}
-	} else if (std::string(argv[1]) == std::string("server"))
+	}
+	else if (std::string(argv[1]) == std::string("server"))
 	{
 		if (std::string(argv[2]) == std::string("bench"))
 		{
+		    ///////////////////////////////////////// STATES SCALE ///////////////////////////////////////////
 			size_t stateIt = statesStart;
 			for (size_t i = 1; i <= roundsPerTest; ++i)
 			{
+				BenchServer(port, stateIt);
 				stateIt *= 2u;
-				BenchServer(3009, stateIt);
 			}
 
+		    ///////////////////////////////////////// INPUTES SCALE //////////////////////////////////////////
 			for (size_t i = 1; i <= roundsPerTest; ++i)
 			{
-				BenchServer(3009, 1000);
+				BenchServer(port, 1000);
 			}
 
+		    ///////////////////////////////////////// SIMULATION SCALE with CONSTANT LOAD ////////////////////
 			size_t curSimNum = 1;
 			for (size_t i = 1; i <= roundsPerTest; ++i)
 			{
-				BenchServer(3009, 1024 / curSimNum);
+				BenchServer(port, 1024 / curSimNum);
 				curSimNum *= 2;
 			}
+
 			return 0;
 		} else
 		{
