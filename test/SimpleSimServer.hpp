@@ -171,7 +171,7 @@ int serverFunc(int port)
                 outputs.setRealValues(sims[requestedSim].states);
                 //std::cout << sims[requestedSim].currentTime << " Outputs: " << outputs << "\n";
                 //send the new values to the client:
-                noFS.sendOutputValues(requestedSim, sims[requestedSim].currentTime, outputs);            // NON OPTIONAL CALL!!!!!!!!!!!!
+                noFS.sendOutputValues(requestedSim, sims[requestedSim].currentTime);            // NON OPTIONAL CALL!!!!!!!!!!!!
                 break;
             }
             case NetOff::ClientMessageSpecifyer::PAUSE:
