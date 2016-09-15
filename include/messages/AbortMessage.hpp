@@ -22,4 +22,5 @@ namespace NetOff
         }
     };
 }
+
 #endif /* INCLUDE_MESSAGES_ABORTMESSAGE_HPP_ */

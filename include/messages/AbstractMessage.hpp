@@ -36,6 +36,7 @@ namespace NetOff
 
         virtual ~AbstractMessage()
         {
+
         }
 
         bool testRequest(const Specifyer & should) const
