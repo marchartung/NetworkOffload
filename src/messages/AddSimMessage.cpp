@@ -19,7 +19,9 @@ namespace NetOff
     //////////////////////////////////////////////
 
     AddSimRequestMessage::AddSimRequestMessage(const int & id, const std::string & path)
-            : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::ADD_SIM)
+            : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::ADD_SIM),
+              _data(nullptr),
+              _dataSize(0)
     {
         _dataSize = sizeof(InitialClientMessageSpecifyer) + sizeof(int) + getStringDataSize(path);
         _data = std::shared_ptr<char>(new char[_dataSize]);
@@ -67,8 +69,8 @@ namespace NetOff
 
     AddSimSuccessMessage::AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs)
             : AbstractMessage<InitialServerMessageSpecifyer>(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM),
+              _data(nullptr),
               _dataSize(0)
-
     {
         _dataSize = sizeof(InitialServerMessageSpecifyer) + sizeof(int) + inputs.dataSize() + outputs.dataSize();
         _data = std::shared_ptr<char>(new char[_dataSize]);
@@ -76,7 +78,7 @@ namespace NetOff
         p = saveShiftIntegralInData(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM, p);
         p = saveShiftIntegralInData(id, p);
         inputs.saveVariablesTo(p);
-        p = shiftDataAccessable<VariableList>(inputs,p);
+        p = shiftDataAccessable<VariableList>(inputs, p);
         outputs.saveVariablesTo(p);
     }
 
@@ -114,7 +116,7 @@ namespace NetOff
 
     VariableList AddSimSuccessMessage::getOutputVariableList() const
     {
-        return VariableList::getVariableListFromData(shift<const int>(shiftDataAccessable<VariableList>(getInputVariableList(),shift<const InitialServerMessageSpecifyer>(_data.get()))));
+        return VariableList::getVariableListFromData(shift<const int>(shiftDataAccessable<VariableList>(getInputVariableList(), shift<const InitialServerMessageSpecifyer>(_data.get()))));
     }
 
     std::string AddSimSuccessMessage::getPath()
@@ -122,4 +124,3 @@ namespace NetOff
         return createStringFromData(shift<int>(shift<InitialServerMessageSpecifyer>(_data.get())));
     }
 }
-
