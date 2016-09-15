@@ -134,7 +134,7 @@ int BenchServer(const int & port, const size_t & numStates)
 			outputs.setRealValues(fmus[requestedFmu]._states.get());
 
 			//send the new values to the client:
-			noFS.sendOutputValues(requestedFmu, fmus[requestedFmu]._currentTime, outputs);
+			noFS.sendOutputValues(requestedFmu, fmus[requestedFmu]._currentTime);
 			break;
 		}
 		case NetOff::ClientMessageSpecifyer::PAUSE:
