@@ -68,7 +68,9 @@ namespace NetOff
 
         /*! Returns size of real container, i.e., number of stored real variable names. */
         size_t sizeReals() const;
+        /*! Returns size of integer container, i.e., number of stored integer variable names. */
         size_t sizeInts() const;
+        /*! Returns size of boolean container, i.e., number of stored boolean variable names. */
         size_t sizeBools() const;
 
         /*! \brief Returns true, if the container is empty. */
