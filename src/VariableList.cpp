@@ -15,6 +15,7 @@
 namespace NetOff
 {
     VariableList::VariableList(const std::shared_ptr<char>& data)
+        :  VariableList()
     {
         _vars = getVariableListFromData(data.get())._vars;
     }
@@ -166,12 +167,12 @@ namespace NetOff
 
     bool VariableList::isSubsetOf(const VariableList& in) const
     {
-        bool abort = true;
+        bool abort;
         for (size_t i = 0; i < _vars.size(); ++i)
         {
             for (const auto & str1 : _vars[i])
             {
-                bool abort = true;
+                abort = true;
                 for (const auto & str2 : in._vars[i])
                     if (str1 == str2)
                     {
