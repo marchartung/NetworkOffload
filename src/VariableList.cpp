@@ -14,6 +14,24 @@
 
 namespace NetOff
 {
+    VariableList::VariableList(const std::shared_ptr<char>& data)
+    {
+        _vars = getVariableListFromData(data.get())._vars;
+    }
+
+    VariableList::VariableList()
+            : _vars(std::vector<std::vector<std::string>>(3))
+    {
+    }
+
+    VariableList::VariableList(const std::vector<std::string>& realVars, const std::vector<std::string>& intVars, const std::vector<std::string>& boolVars)
+            : _vars(std::vector<std::vector<std::string>>(3))
+    {
+        _vars[0] = realVars;
+        _vars[1] = intVars;
+        _vars[2] = boolVars;
+    }
+
     void VariableList::addReal(const std::string& varName)
     {
         _vars[0].push_back(varName);
@@ -67,24 +85,6 @@ namespace NetOff
             for (size_t j = 0; j < _vars[i].size(); ++j)
                 res += getStringDataSize(_vars[i][j]);
         return res;
-    }
-
-    VariableList::VariableList(const std::shared_ptr<char>& data)
-    {
-        _vars = getVariableListFromData(data.get())._vars;
-    }
-
-    VariableList::VariableList()
-            : _vars(std::vector<std::vector<std::string>>(3))
-    {
-    }
-
-    VariableList::VariableList(const std::vector<std::string>& realVars, const std::vector<std::string>& intVars, const std::vector<std::string>& boolVars)
-            : _vars(std::vector<std::vector<std::string>>(3))
-    {
-        _vars[0] = realVars;
-        _vars[1] = intVars;
-        _vars[2] = boolVars;
     }
 
     bool VariableList::empty() const
