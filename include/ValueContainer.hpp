@@ -16,8 +16,6 @@
 
 namespace NetOff
 {
-    // foreward declaration:
-
     class ValueContainer : public RawDataAccessable
     {
         template<typename T>
