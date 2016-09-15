@@ -28,6 +28,9 @@ namespace NetOff
 
         SimulationServer(const int & port);
 
+        SimulationServer(const SimulationServer& rhs) = delete;
+        SimulationServer& operator=(const SimulationServer& rhs) = delete;
+
         ~SimulationServer();
 
 
@@ -70,15 +73,8 @@ namespace NetOff
         void confirmUnpause();
         void confirmReset();
 
-        const int & getPort() const
-        {
-            return _port;
-        }
-
-        void setPort(const int & port)
-        {
-            this->_port = port;
-        }
+        const int & getPort() const;
+        void setPort(const int & port);
 
         /////////////////////////////////////////
         ////////////RUNNING CONNECTION///////////
@@ -86,11 +82,10 @@ namespace NetOff
 
         ClientMessageSpecifyer getClientRequest();
 
-
         const double & getLastReceivedTime(const int& simId) const;
         int getLastSimId() const;
 
-        bool sendOutputValues(const int & simId, const double & time, const ValueContainer & vals);
+        bool sendOutputValues(const int & simId, const double & time);
         ValueContainer & recvInputValues(const int & simId);
         bool isActive() const;
 
