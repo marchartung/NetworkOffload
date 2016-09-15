@@ -23,6 +23,12 @@ namespace NetOff
 
         AddSimRequestMessage(std::shared_ptr<char> & data);
 
+        AddSimRequestMessage(const AddSimRequestMessage& rhs) = default;
+
+        AddSimRequestMessage& operator=(const AddSimRequestMessage& rhs) = default;
+
+        ~AddSimRequestMessage() = default;
+
         char * data() override;
 
         const char * data() const override;
@@ -46,6 +52,12 @@ namespace NetOff
         AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs);
 
         AddSimSuccessMessage(std::shared_ptr<char> & data);
+
+        AddSimSuccessMessage(const AddSimSuccessMessage& rhs) = default;
+
+        AddSimSuccessMessage& operator=(const AddSimSuccessMessage& rhs) = default;
+
+        ~AddSimSuccessMessage() = default;
 
         char * data() override;
 
