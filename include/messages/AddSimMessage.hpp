@@ -16,7 +16,6 @@ namespace NetOff
 {
     class AddSimRequestMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
-
      public:
 
         AddSimRequestMessage(const int & id, const std::string & path);
@@ -46,7 +45,6 @@ namespace NetOff
 
     class AddSimSuccessMessage : public AbstractMessage<InitialServerMessageSpecifyer>
     {
-
      public:
 
         AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs);
