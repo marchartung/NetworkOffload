@@ -77,6 +77,7 @@ namespace NetOff
 
     ValueContainer::~ValueContainer()
     {
+
     }
 
     void ValueContainer::setRealValues(const double * values)
