@@ -26,7 +26,7 @@ namespace NetOff
 
         SimulationClient();
 
-        SimulationClient(const std::string & hostAddress, const int & port, const size_t & initialResponseTime = 1000);
+        SimulationClient(const std::string & hostAddress, const int & port);
 
         ~SimulationClient();
 
@@ -125,7 +125,6 @@ namespace NetOff
 
         std::string _hostAddress;
         int _port;
-        size_t _initialResponseTime;
         std::map<std::string, int> _pathToId;
 
         CurrentState _currentState;

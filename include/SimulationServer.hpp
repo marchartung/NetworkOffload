@@ -91,7 +91,6 @@ namespace NetOff
 
      private:
         int _port;
-        size_t _initialResponseTime;
 
         CurrentState _currentState;
 

@@ -17,7 +17,6 @@ namespace NetOff
 
     SimulationServer::SimulationServer(const int & port)
             : _port(port),
-              _initialResponseTime(100),
               _currentState(CurrentState::NONE),
               _pathToId(),
               _netServer(),
