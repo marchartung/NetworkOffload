@@ -28,7 +28,7 @@ namespace NetOff
         void deinitialize() override;
 
 
-        virtual char getChar() const
+        virtual char getChar() const override
         {
             return 'S';
         }
