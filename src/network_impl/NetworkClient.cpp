@@ -26,26 +26,24 @@ namespace NetOff
         IPaddress ip;
         SDLNet_Init();
 
-        unsigned times = 0;
-
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
             std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
             return false;
         }
 
+        unsigned times = 0;
         do
         {
             SDL_Delay(_sleepTime);
             _socket = SDLNet_TCP_Open(&ip);
             std::cout << "Waiting for server on host " << ip.host << " and port " << port << " ..." << std::endl;
-
         }
         while ((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int) _numMaxSleeps));
+
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {
             std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
-
             return false;
         }
 
