@@ -12,6 +12,7 @@ namespace NetOff
 {
 
     ValueContainer::ValueContainer()
+//        : //ValueContainer(0, 0, 0)
             : _data(nullptr),
               _dataPtr(nullptr),
               _realData(nullptr),
@@ -25,20 +26,20 @@ namespace NetOff
     {
     }
 
-    ValueContainer::ValueContainer(size_t numReals, size_t numInts, size_t numBools)
-            : _data(nullptr),
-              _dataPtr(nullptr),
-              _realData(nullptr),
-              _intData(nullptr),
-              _boolData(nullptr),
-              _numReal(numReals),
-              _numInt(numInts),
-              _numBool(numBools),
-              _dataSize(0),
-              _id(-1)
-    {
-        init();
-    }
+//    ValueContainer::ValueContainer(size_t numReals, size_t numInts, size_t numBools)
+//            : _data(nullptr),
+//              _dataPtr(nullptr),
+//              _realData(nullptr),
+//              _intData(nullptr),
+//              _boolData(nullptr),
+//              _numReal(numReals),
+//              _numInt(numInts),
+//              _numBool(numBools),
+//              _dataSize(0),
+//              _id(-1)
+//    {
+//        init(numReals, numInts, numBools);
+//    }
 
     ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
             : _data(data),
@@ -155,10 +156,10 @@ namespace NetOff
         return _dataPtr;
     }
 
-    void ValueContainer::init()
-    {
-        init(_numReal, _numInt, _numBool);
-    }
+//    void ValueContainer::init()
+//    {
+//        init(_numReal, _numInt, _numBool);
+//    }
 
     void ValueContainer::init(size_t numReal, size_t numInt, size_t numBool)
     {

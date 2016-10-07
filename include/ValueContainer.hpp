@@ -73,12 +73,6 @@ namespace NetOff
 
         ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id);
 
-        //ValueContainer(const ValueContainer & in);
-
-        ValueContainer(size_t numReals, size_t numInts, size_t numBools);
-
-        void init();
-
         void init(size_t numReal, size_t numInt, size_t numBool);
 
         void reinit(size_t numReal, size_t numInt, size_t numBool);
