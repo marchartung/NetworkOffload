@@ -15,18 +15,7 @@ namespace NetOff
 {
 
     SimulationClient::SimulationClient()
-            : _hostAddress(""),
-              _port(-1),
-              _pathToId(),
-              _currentState(CurrentState::NONE),
-              _netClient(),
-              _possibleInputVarNames(),
-              _possibleOutputVarNames(),
-              _selectedInputVarNames(),
-              _selectedOutputVarNames(),
-              _isInitialized(),
-              _inputMessages(),
-              _outputMessages()
+            : SimulationClient("", -1)
     {
     }
 
@@ -81,8 +70,10 @@ namespace NetOff
 
     int SimulationClient::addSimulation(const std::string & serverPathToSim)
     {
+        // SimulationClient is not already initialized.
         if (_currentState == CurrentState::NONE)
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to add simulation before calling initialize(host,port).");
+        // The very same simulation was already added.
         if (_pathToId.find(serverPathToSim) != _pathToId.end())
             return _pathToId[serverPathToSim];
 
@@ -123,8 +114,8 @@ namespace NetOff
         return _possibleOutputVarNames[simId];
     }
 
-    ValueContainer & SimulationClient::initializeSimulation(const int & simId, const VariableList & inputs, const VariableList & outputs, const double * inputsReal,
-                                                            const int * inputsInt, const char * inputsBool)
+    ValueContainer & SimulationClient::initializeSimulation(const int & simId, const VariableList & inputs, const VariableList & outputs,
+                                                            const double * inputsReal, const int * inputsInt, const char * inputsBool)
     {
         _selectedInputVarNames[simId] = inputs;
         if (!_selectedInputVarNames[simId].isSubsetOf(_possibleInputVarNames[simId]))
@@ -170,22 +161,29 @@ namespace NetOff
         return true;
     }
 
+    /////////////////////////////////////////
+    ////////////RUNNING CONNECTION///////////
+    /////////////////////////////////////////
+
     bool SimulationClient::start()
     {
         bool abortSim = false;
 
         for (const bool & i : _isInitialized)
+        {
             if (!i)
             {
                 abortSim = true;
                 break;
             }
+        }
         if (abortSim || _isInitialized.empty())
         {
             AbortRequestMessage abortM;
             sendInitialRequest(abortM);
             throw std::runtime_error("ERROR: SimulationClient: No simulation added or at least one simulation is not initialized.");
         }
+
         StartRequestMessage startRequest;
         sendInitialRequest(startRequest);
         recvInitialServerSuccess<StartSuccessMessage>(InitialServerMessageSpecifyer::SUCCESS_START, "SimulationClient: Can't start server.");
@@ -237,10 +235,21 @@ namespace NetOff
         return res;
     }
 
+    bool SimulationClient::isStarted() const
+    {
+        return _currentState == CurrentState::STARTED;
+    }
+
     bool SimulationClient::send(const int simId)
     {
         _netClient.send(reinterpret_cast<const char *>(&_inputMessages[simId].getId()), sizeof(int));  //send id
         return _netClient.send(_inputMessages[simId].data(), _inputMessages[simId].dataSize());
+    }
+
+    bool SimulationClient::recv(const int simId, const double & expectedTime, const ServerMessageSpecifyer & spec)
+    {
+        _netClient.recv(_outputMessages[simId].data(), _outputMessages[simId].dataSize());
+        return _outputMessages[simId].getTime() == expectedTime && _outputMessages[simId].getSpecifyer() == spec;
     }
 
     const std::string & SimulationClient::getHostAddress() const
@@ -263,12 +272,6 @@ namespace NetOff
         _port = port;
     }
 
-    bool SimulationClient::recv(const int simId, const double & expectedTime, const ServerMessageSpecifyer & spec)
-    {
-        _netClient.recv(_outputMessages[simId].data(), _outputMessages[simId].dataSize());
-        return _outputMessages[simId].getTime() == expectedTime && _outputMessages[simId].getSpecifyer() == spec;
-    }
-
     ValueContainer & SimulationClient::recvOutputValues(const int & simId, const double & time)
     {
         if (_currentState < CurrentState::STARTED)
@@ -282,10 +285,10 @@ namespace NetOff
     {
         if (_currentState < CurrentState::STARTED)
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to send inputs before calling start().");
+
         if (vals.getSimId() != simId || vals.data() != getInputValueContainer(simId).data())
-        {
             throw std::runtime_error("SimulationClient: The ValueContainer is collected via getValueContainerInput()");
-        }
+
         _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
         _inputMessages[simId].setTime(time);
         return send(simId);
@@ -305,8 +308,4 @@ namespace NetOff
         return _outputMessages[simId].getContainer();
     }
 
-    bool SimulationClient::isStarted() const
-    {
-        return _currentState == CurrentState::STARTED;
-    }
-}
+} // End namespace NetOff
