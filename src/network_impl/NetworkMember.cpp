@@ -73,9 +73,9 @@ namespace NetOff
     bool NetworkMember::variableSend(const char* buffer, const int & num)
     {
         int numCopy = num;
-        if (!send(reinterpret_cast<char *>(&numCopy), sizeof(numCopy)))
+        if (!send(reinterpret_cast<char *>(&numCopy), sizeof(numCopy))) // Send size
             return false;
-        return send(buffer, num);
+        return send(buffer, num);                                       // Send buffer
     }
 
     std::shared_ptr<char> NetworkMember::variableRecv(size_t * numBytes)
