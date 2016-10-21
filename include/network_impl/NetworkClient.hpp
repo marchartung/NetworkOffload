@@ -27,12 +27,9 @@ namespace NetOff
 
         bool initialize(const std::string & host, const int & port);
 
-        void deinitialize();
+        void deinitialize() override;
 
-        virtual char getChar() const
-        {
-            return 'C';
-        }
+        char getChar() const override;
     };
 
 } /* namespace NetOff */
