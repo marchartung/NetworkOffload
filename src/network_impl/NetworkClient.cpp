@@ -60,4 +60,9 @@ namespace NetOff
         killSocket(_socket);
     }
 
+    char NetworkClient::getChar() const
+    {
+        return 'C';
+    }
+
 } /* namespace NetOff */
