@@ -144,7 +144,7 @@ namespace NetOff
     {
         std::tie(_numReal, _numInt, _numBool) = std::tie(numReal, numInt, numBool);
         _dataSize = calcDataSize();
-        _data = std::shared_ptr<char>(new char[_dataSize]);
+        _data = std::shared_ptr<char>(new char[_dataSize], std::default_delete<char[]>());
         _id = -1;
         setPointers();
     }
