@@ -9,7 +9,7 @@ Like most software projects NetworkOffloader uses some great ideas from other pe
       -> tested with version 2.04
     * SDL2_net (https://www.libsdl.org/projects/SDL_net/)
       -> tested with version 2.01
-    * CMake 3.10 or higher (cmake.org)
+    * CMake 2.10 or higher (cmake.org)
       
 ### Install
   
