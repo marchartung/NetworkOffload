@@ -5,10 +5,11 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/messages/RuntimeMessage.hpp"
+#include "messages/RuntimeMessage.hpp"
 
 namespace NetOff
 {
+
     StartRequestMessage::StartRequestMessage()
             : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::START)
     {
@@ -34,7 +35,7 @@ namespace NetOff
     {
     }
 
-    PauseRequestMessage::PauseRequestMessage(std::shared_ptr<char>& data)
+    PauseRequestMessage::PauseRequestMessage(std::shared_ptr<char> & data)
             : AbstractMessage<ClientMessageSpecifyer>(data)
     {
     }
@@ -44,7 +45,7 @@ namespace NetOff
     {
     }
 
-    PauseSuccessMessage::PauseSuccessMessage(std::shared_ptr<char>& data)
+    PauseSuccessMessage::PauseSuccessMessage(std::shared_ptr<char> & data)
             : AbstractMessage<ServerMessageSpecifyer>(data)
     {
     }
@@ -54,7 +55,7 @@ namespace NetOff
     {
     }
 
-    UnpauseRequestMessage::UnpauseRequestMessage(std::shared_ptr<char>& data)
+    UnpauseRequestMessage::UnpauseRequestMessage(std::shared_ptr<char> & data)
             : AbstractMessage<ClientMessageSpecifyer>(data)
     {
     }
@@ -64,7 +65,7 @@ namespace NetOff
     {
     }
 
-    UnpauseSuccessMessage::UnpauseSuccessMessage(std::shared_ptr<char>& data)
+    UnpauseSuccessMessage::UnpauseSuccessMessage(std::shared_ptr<char> & data)
             : AbstractMessage<ServerMessageSpecifyer>(data)
     {
     }
@@ -84,9 +85,10 @@ namespace NetOff
     {
     }
 
-    ResetSuccessMessage::ResetSuccessMessage(std::shared_ptr<char>& data)
+    ResetSuccessMessage::ResetSuccessMessage(std::shared_ptr<char> & data)
             : AbstractMessage<ServerMessageSpecifyer>(data)
     {
     }
-}
+
+} /* End namespace NetOff */
 

@@ -12,6 +12,7 @@
 
 namespace NetOff
 {
+
     class StartRequestMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
      public:
