@@ -24,7 +24,8 @@ namespace NetOff
 
         VariableList();
 
-        VariableList(const std::vector<std::string> & realVars, const std::vector<std::string> & intVars, const std::vector<std::string> & boolVars);
+        VariableList(const std::vector<std::string> & realVars, const std::vector<std::string> & intVars,
+                     const std::vector<std::string> & boolVars);
 
         /*! \brief Adds a real variable to the container.
          *
