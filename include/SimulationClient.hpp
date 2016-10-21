@@ -102,9 +102,9 @@ namespace NetOff
          *                      to present bools in memory, so they are presented as chars. This argument is optional.
          * @return Returns the initial values of the simulation. Most times needed for setting up the client functionality.
          */
-        ValueContainer & initializeSimulation(const int & simId, const VariableList & inputs, const VariableList & outputs,
-                                              const double * inputsReal = nullptr, const int * inputsInt = nullptr,
-                                              const char * inputsBool = nullptr);
+        ValueContainer & initializeSimulation(const int & simId, const VariableList & inputs,
+                                              const VariableList & outputs, const double * inputsReal = nullptr,
+                                              const int * inputsInt = nullptr, const char * inputsBool = nullptr);
 
         /////////////////////////////////////////
         ////////////RUNNING CONNECTION///////////
@@ -223,7 +223,8 @@ namespace NetOff
          * \param spec          Specifier to identify message and thus output values.
          * @return True, if values were send successfully.
          */
-        bool recv(const int simId, const double & expectedTime, const ServerMessageSpecifyer & spec = ServerMessageSpecifyer::OUTPUTS);
+        bool recv(const int simId, const double & expectedTime, const ServerMessageSpecifyer & spec =
+                          ServerMessageSpecifyer::OUTPUTS);
 
         template<typename MessageType>
         bool sendInitialRequest(MessageType & in)
@@ -243,7 +244,8 @@ namespace NetOff
         }
 
         template<typename MessageType>
-        bool recvServerRequest(MessageType & out, const ServerMessageSpecifyer & should, const std::string & errorMessage)
+        bool recvServerRequest(MessageType & out, const ServerMessageSpecifyer & should,
+                               const std::string & errorMessage)
         {
             bool res = _netClient.recv(out.data(), out.dataSize());
             if (!out.testRequest(should))
@@ -253,6 +255,6 @@ namespace NetOff
 
     };
 
-} // End namespace NetOff
+}  // End namespace NetOff
 
 #endif /* INCLUDE_SIMULATIONCLIENT_HPP_ */
