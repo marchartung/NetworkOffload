@@ -29,10 +29,10 @@ namespace NetOff
         SimulationServer(const int & port);
 
         SimulationServer(const SimulationServer& rhs) = delete;
+
         SimulationServer& operator=(const SimulationServer& rhs) = delete;
 
         ~SimulationServer();
-
 
         /////////////////////////////////////////
         //////////////DE-/INITIALIZATION/////////////
@@ -50,17 +50,17 @@ namespace NetOff
          */
         void deinitialize();
 
-
         InitialClientMessageSpecifyer getInitialClientRequest();
 
-        std::tuple<std::string,int> getAddedSimulation();
+        std::tuple<std::string, int> getAddedSimulation();
 
         std::string getSimulationFileName() const;
 
         VariableList getSelectedInputVariables(const int & simId) const;
         VariableList getSelectedOutputVariables(const int & simId) const;
 
-        bool confirmSimulationAdd(const int & simId, const VariableList & varNamePossibleInputs, const VariableList & varNamePossibleOutputs);
+        bool confirmSimulationAdd(const int & simId, const VariableList & varNamePossibleInputs,
+                                  const VariableList & varNamePossibleOutputs);
         bool confirmSimulationInit(const int & simId, const ValueContainer & initialOutputs);
 
         bool confirmSimulationFile(const int & simId, const std::string & fileSrc);
@@ -94,7 +94,7 @@ namespace NetOff
 
         CurrentState _currentState;
 
-        std::map<std::string,int> _pathToId;
+        std::map<std::string, int> _pathToId;
         NetworkServer _netServer;
 
         InitialClientMessageSpecifyer _lastInitSpec;
@@ -104,7 +104,7 @@ namespace NetOff
 
         std::string _lastSimulationFile;
 
-        std::pair<const std::string,int> * _lastAddedSim;
+        std::pair<const std::string, int> * _lastAddedSim;
 
         bool _handledLastRequest;
 
