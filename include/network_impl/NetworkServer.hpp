@@ -19,6 +19,7 @@ namespace NetOff
         NetworkServer();
 
         NetworkServer(const NetworkServer &) = delete;
+
         NetworkServer& operator=(const NetworkServer &) = delete;
 
         virtual ~NetworkServer();
@@ -27,11 +28,8 @@ namespace NetOff
 
         void deinitialize() override;
 
-
-        virtual char getChar() const override
-        {
-            return 'S';
-        }
+        /** Returns 'S' to identify it as server. */
+        char getChar() const override;
 
      private:
         TCPsocket _tcpsock;

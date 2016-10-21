@@ -62,5 +62,12 @@ namespace NetOff
         killSocket(_tcpsock);
         killSocket(_socket);
     }
+
+    char NetworkServer::getChar() const
+    {
+        return 'S';
+    }
+
+
 } /* namespace NetOff */
 
