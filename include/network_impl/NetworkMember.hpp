@@ -13,12 +13,14 @@
 
 namespace NetOff
 {
+
     class NetworkMember
     {
      public:
         NetworkMember();
 
         NetworkMember(const NetworkMember& rhs) = delete;
+
         NetworkMember& operator=(const NetworkMember& rhs) = delete;
 
         virtual ~NetworkMember();
