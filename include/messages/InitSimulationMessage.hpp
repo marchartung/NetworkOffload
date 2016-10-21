@@ -13,12 +13,19 @@
 
 namespace NetOff
 {
+
     class InitSimulationMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
      public:
         InitSimulationMessage(const int & simId, const VariableList & inputs, const VariableList & outputs);
 
         InitSimulationMessage(std::shared_ptr<char> & data);
+
+        InitSimulationMessage(const InitSimulationMessage & rhs) = delete;
+
+        InitSimulationMessage& operator=(const InitSimulationMessage & rhs) = delete;
+
+        ~InitSimulationMessage() = default;
 
         char * data() override;
 
