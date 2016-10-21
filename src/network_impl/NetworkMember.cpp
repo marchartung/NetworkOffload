@@ -5,7 +5,7 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/network_impl/NetworkMember.hpp"
+#include "network_impl/NetworkMember.hpp"
 
 #include <iostream>
 #include <algorithm>
@@ -82,7 +82,7 @@ namespace NetOff
     {
         int num = 0;
         recv(reinterpret_cast<char*>(&num), sizeof(num));
-        std::shared_ptr<char> res(new char[num]);
+        std::shared_ptr<char> res(new char[num], std::default_delete<char[]>());
         recv(res.get(), num);
         if (numBytes != nullptr)
         {
