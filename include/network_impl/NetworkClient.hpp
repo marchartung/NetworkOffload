@@ -25,7 +25,7 @@ namespace NetOff
 
         ~NetworkClient();
 
-		bool initialize(const std::string & host, const int & port);
+        bool initialize(const std::string & host, const int & port);
 
         void deinitialize();
 
