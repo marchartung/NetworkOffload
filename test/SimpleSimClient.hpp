@@ -38,8 +38,8 @@ int clientFunc(const std::string & hostname, int port) {
 	outputVars = allOutputs;
 
 	// initialize the added simulation:
-	noFC.initializeSimulation(funSim, inputVars, outputVars, inputValue,
-			nullptr, nullptr);
+    noFC.initializeSimulation(funSim, inputVars, outputVars, inputValue, nullptr, nullptr);
+
 	noFC.getSimulationFile(funSim,"./test_src.txt","./test_target.txt");
 
 	// now its possible to access the containers of the initialized simulation
