@@ -24,7 +24,7 @@ namespace NetOff
               _dataSize(0)
     {
         _dataSize = sizeof(InitialClientMessageSpecifyer) + sizeof(int) + getStringDataSize(path);
-        _data = std::shared_ptr<char>(new char[_dataSize]);
+        _data = std::shared_ptr<char>(new char[_dataSize], std::default_delete<char[]>());
         char * p = _data.get();
         p = saveShiftIntegralInData(InitialClientMessageSpecifyer::ADD_SIM, p);
         p = saveShiftIntegralInData(id, p);
@@ -32,7 +32,8 @@ namespace NetOff
     }
 
     AddSimRequestMessage::AddSimRequestMessage(std::shared_ptr<char> & data)
-            : AbstractMessage<InitialClientMessageSpecifyer>(*reinterpret_cast<InitialClientMessageSpecifyer *>(data.get())),
+            : AbstractMessage<InitialClientMessageSpecifyer>(
+                      *reinterpret_cast<InitialClientMessageSpecifyer *>(data.get())),
               _data(data),
               _dataSize(0)
     {
@@ -67,13 +68,14 @@ namespace NetOff
     /////////AddSimRequestSuccessMessage//////////
     //////////////////////////////////////////////
 
-    AddSimSuccessMessage::AddSimSuccessMessage(const int & id, const VariableList & inputs, const VariableList & outputs)
+    AddSimSuccessMessage::AddSimSuccessMessage(const int & id, const VariableList & inputs,
+                                               const VariableList & outputs)
             : AbstractMessage<InitialServerMessageSpecifyer>(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM),
               _data(nullptr),
               _dataSize(0)
     {
         _dataSize = sizeof(InitialServerMessageSpecifyer) + sizeof(int) + inputs.dataSize() + outputs.dataSize();
-        _data = std::shared_ptr<char>(new char[_dataSize]);
+        _data = std::shared_ptr<char>(new char[_dataSize], std::default_delete<char[]>());
         char * p = _data.get();
         p = saveShiftIntegralInData(InitialServerMessageSpecifyer::SUCCESS_ADD_SIM, p);
         p = saveShiftIntegralInData(id, p);
@@ -83,7 +85,8 @@ namespace NetOff
     }
 
     AddSimSuccessMessage::AddSimSuccessMessage(std::shared_ptr<char> & data)
-            : AbstractMessage<InitialServerMessageSpecifyer>(getIntegralFromData<InitialServerMessageSpecifyer>(data.get())),
+            : AbstractMessage<InitialServerMessageSpecifyer>(
+                      getIntegralFromData<InitialServerMessageSpecifyer>(data.get())),
               _data(data),
               _dataSize(0)
     {
@@ -111,12 +114,16 @@ namespace NetOff
 
     VariableList AddSimSuccessMessage::getInputVariableList() const
     {
-        return VariableList::getVariableListFromData(shift<const int>(shift<const InitialServerMessageSpecifyer>(_data.get())));
+        return VariableList::getVariableListFromData(
+                shift<const int>(shift<const InitialServerMessageSpecifyer>(_data.get())));
     }
 
     VariableList AddSimSuccessMessage::getOutputVariableList() const
     {
-        return VariableList::getVariableListFromData(shift<const int>(shiftDataAccessable<VariableList>(getInputVariableList(), shift<const InitialServerMessageSpecifyer>(_data.get()))));
+        return VariableList::getVariableListFromData(
+                shift<const int>(
+                        shiftDataAccessable<VariableList>(getInputVariableList(),
+                                                          shift<const InitialServerMessageSpecifyer>(_data.get()))));
     }
 
     std::string AddSimSuccessMessage::getPath()

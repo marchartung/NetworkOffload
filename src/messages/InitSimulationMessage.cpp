@@ -5,12 +5,14 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/messages/InitSimulationMessage.hpp"
-#include "../../include/network_impl/SimNetworkFunctions.hpp"
+#include "messages/InitSimulationMessage.hpp"
+#include "network_impl/SimNetworkFunctions.hpp"
 
 namespace NetOff
 {
-    InitSimulationMessage::InitSimulationMessage(const int& simId, const VariableList& inputs, const VariableList& outputs)
+
+    InitSimulationMessage::InitSimulationMessage(const int & simId, const VariableList & inputs,
+                                                 const VariableList & outputs)
             : AbstractMessage<InitialClientMessageSpecifyer>(InitialClientMessageSpecifyer::INIT_SIM),
               _data(nullptr),
               _dataSize(0),
@@ -19,8 +21,9 @@ namespace NetOff
               _inputPtr(nullptr),
               _outputPtr(nullptr)
     {
-        _dataSize = sizeof(InitialClientMessageSpecifyer) + sizeof(int) + 3 * sizeof(size_t) + inputs.dataSize() + outputs.dataSize();
-        _data = std::shared_ptr<char>(new char[_dataSize]);
+        _dataSize = sizeof(InitialClientMessageSpecifyer) + sizeof(int) + 3 * sizeof(size_t) + inputs.dataSize()
+                + outputs.dataSize();
+        _data = std::shared_ptr<char>(new char[_dataSize], std::default_delete<char[]>());
         char * p = _data.get();
 
         // Data structure: [ Specifyer | id | inputs | outputs | numReals | reals | numInts | ints | numBools | bools ]
@@ -60,12 +63,12 @@ namespace NetOff
 
     }
 
-    char* InitSimulationMessage::data()
+    char * InitSimulationMessage::data()
     {
         return _data.get();
     }
 
-    const char* InitSimulationMessage::data() const
+    const char * InitSimulationMessage::data() const
     {
         return _data.get();
     }
@@ -85,7 +88,7 @@ namespace NetOff
         return VariableList::getVariableListFromData(_outputPtr);
     }
 
-    const int& InitSimulationMessage::getSimId() const
+    const int & InitSimulationMessage::getSimId() const
     {
         return *_id;
     }
