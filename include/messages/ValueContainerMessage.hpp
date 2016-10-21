@@ -9,9 +9,9 @@
 #define INCLUDE_MESSAGES_VALUECONTAINERMESSAGE_HPP_
 
 #include "AbstractMessage.hpp"
-#include "../network_impl/SimNetworkFunctions.hpp"
-#include "../VariableList.hpp"
-#include "../ValueContainer.hpp"
+#include "network_impl/SimNetworkFunctions.hpp"
+#include "VariableList.hpp"
+#include "ValueContainer.hpp"
 
 namespace NetOff
 {
@@ -31,16 +31,18 @@ namespace NetOff
                   _container()
         {
             _dataSize = sizeof(Specifyer) + sizeof(int) + sizeof(double)
-                    + ValueContainer::calcDataSize(vars.getReals().size(), vars.getInts().size(), vars.getBools().size());
-            _data = std::shared_ptr<char>(new char[_dataSize]);
+                    + ValueContainer::calcDataSize(vars.getReals().size(), vars.getInts().size(),
+                                                   vars.getBools().size());
+            _data = std::shared_ptr<char>(new char[_dataSize], std::default_delete<char[]>());
             char * p = _data.get();
             _spec = reinterpret_cast<Specifyer *>(p);
             p = saveShiftIntegralInData<Specifyer>(spec, p);
             _id = reinterpret_cast<int *>(p);
             p = saveShiftIntegralInData(simId, p);
             _time = reinterpret_cast<double *>(p);
-            p = saveShiftIntegralInData<double>(0.0,p);
-            _container = ValueContainer(_data, p, vars.getReals().size(), vars.getInts().size(), vars.getBools().size(),simId);
+            p = saveShiftIntegralInData<double>(0.0, p);
+            _container = ValueContainer(_data, p, vars.getReals().size(), vars.getInts().size(), vars.getBools().size(),
+                                        simId);
         }
 
         ValueContainerMessage()
@@ -52,8 +54,26 @@ namespace NetOff
                   _time(nullptr),
                   _container()
         {
-            _data = std::shared_ptr<char>(new char[_dataSize]);
         }
+
+        ValueContainerMessage(ValueContainerMessage && in)
+                : ValueContainerMessage()
+        {
+            *this = std::move(in);
+        }
+
+        ValueContainerMessage & operator=(ValueContainerMessage && in)
+        {
+            std::swap(_data, in._data);
+            std::swap(_dataSize, in._dataSize);
+            std::swap(_spec, in._spec);
+            std::swap(_id, in._id);
+            std::swap(_time, in._time);
+            std::swap(_container, in._container);
+            return *this;
+        }
+
+        ~ValueContainerMessage() = default;
 
         ValueContainer & getContainer()
         {
