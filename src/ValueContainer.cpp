@@ -41,6 +41,7 @@ namespace NetOff
     }
 
     ValueContainer::ValueContainer(ValueContainer && in)
+        : ValueContainer()
     {
         *this = std::move(in);
     }
