@@ -8,9 +8,12 @@
 #ifndef INCLUDE_MESSAGES_ADDSIMMESSAGE_HPP_
 #define INCLUDE_MESSAGES_ADDSIMMESSAGE_HPP_
 
-#include "AbstractMessage.hpp"
-#include "../AdditionalTypes.hpp"
-#include "../VariableList.hpp"
+#include "messages/AbstractMessage.hpp"
+#include "AdditionalTypes.hpp"
+#include "VariableList.hpp"
+
+#include <memory>
+#include <string>
 
 namespace NetOff
 {

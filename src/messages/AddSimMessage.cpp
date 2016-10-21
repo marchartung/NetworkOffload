@@ -5,12 +5,8 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/messages/AddSimMessage.hpp"
-#include "../../include/messages/AbstractMessage.hpp"
-#include "../../include/AdditionalTypes.hpp"
-#include "../../include/network_impl/SimNetworkFunctions.hpp"
-
-#include <iostream>
+#include "messages/AddSimMessage.hpp"
+#include "network_impl/SimNetworkFunctions.hpp"
 
 namespace NetOff
 {
