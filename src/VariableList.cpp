@@ -5,8 +5,8 @@
  *      Author: Marc Hartung
  */
 
-#include "../include/VariableList.hpp"
-#include "../include/network_impl/SimNetworkFunctions.hpp"
+#include "VariableList.hpp"
+#include "network_impl/SimNetworkFunctions.hpp"
 
 #include <ostream>
 #include <string>
@@ -15,7 +15,7 @@
 namespace NetOff
 {
     VariableList::VariableList(const std::shared_ptr<char>& data)
-        :  VariableList()
+            : VariableList()
     {
         _vars = getVariableListFromData(data.get())._vars;
     }
@@ -25,7 +25,8 @@ namespace NetOff
     {
     }
 
-    VariableList::VariableList(const std::vector<std::string>& realVars, const std::vector<std::string>& intVars, const std::vector<std::string>& boolVars)
+    VariableList::VariableList(const std::vector<std::string>& realVars, const std::vector<std::string>& intVars,
+                               const std::vector<std::string>& boolVars)
             : _vars(std::vector<std::vector<std::string>>(3))
     {
         _vars[0] = realVars;
@@ -33,47 +34,47 @@ namespace NetOff
         _vars[2] = boolVars;
     }
 
-    void VariableList::addReal(const std::string& varName)
+    void VariableList::addReal(const std::string & varName)
     {
         _vars[0].push_back(varName);
     }
 
-    void VariableList::addInt(const std::string& varName)
+    void VariableList::addInt(const std::string & varName)
     {
         _vars[1].push_back(varName);
     }
 
-    void VariableList::addBool(const std::string& varName)
+    void VariableList::addBool(const std::string & varName)
     {
         _vars[2].push_back(varName);
     }
 
-    void VariableList::addReals(const std::vector<std::string>& varNames)
+    void VariableList::addReals(const std::vector<std::string> & varNames)
     {
         _vars[0].insert(_vars[0].end(), varNames.begin(), varNames.end());
     }
 
-    void VariableList::addInts(const std::vector<std::string>& varNames)
+    void VariableList::addInts(const std::vector<std::string> & varNames)
     {
         _vars[1].insert(_vars[1].end(), varNames.begin(), varNames.end());
     }
 
-    void VariableList::addBools(const std::vector<std::string>& varNames)
+    void VariableList::addBools(const std::vector<std::string> & varNames)
     {
         _vars[2].insert(_vars[2].end(), varNames.begin(), varNames.end());
     }
 
-    const std::vector<std::string>& VariableList::getReals() const
+    const std::vector<std::string> & VariableList::getReals() const
     {
         return _vars[0];
     }
 
-    const std::vector<std::string>& VariableList::getInts() const
+    const std::vector<std::string> & VariableList::getInts() const
     {
         return _vars[1];
     }
 
-    const std::vector<std::string>& VariableList::getBools() const
+    const std::vector<std::string> & VariableList::getBools() const
     {
         return _vars[2];
     }
@@ -95,14 +96,14 @@ namespace NetOff
 
     std::shared_ptr<const char> VariableList::data() const
     {
-        std::shared_ptr<char> res(new char[dataSize()]);
+        std::shared_ptr<char> res(new char[dataSize()], std::default_delete<char[]>());
         saveVariablesTo(res.get());
         return res;
     }
 
     std::shared_ptr<char> VariableList::data()
     {
-        std::shared_ptr<char> res(new char[dataSize()]);
+        std::shared_ptr<char> res(new char[dataSize()], std::default_delete<char[]>());
         saveVariablesTo(res.get());
         return res;
     }
@@ -165,7 +166,7 @@ namespace NetOff
         return out;
     }
 
-    bool VariableList::isSubsetOf(const VariableList& in) const
+    bool VariableList::isSubsetOf(const VariableList & in) const
     {
         bool abort;
         for (size_t i = 0; i < _vars.size(); ++i)
@@ -202,15 +203,14 @@ namespace NetOff
         return _vars[2].size();
     }
 
-    size_t VariableList::findRealVariableNameIndex(const std::string& varName) const
+    size_t VariableList::findRealVariableNameIndex(const std::string & varName) const
     {
         size_t res = 0;
-        auto pos = std::find(_vars[0].begin(),_vars[0].end(),varName);
-        if(pos != _vars[0].end())
-            res = std::distance(_vars[0].begin(),pos);
+        auto pos = std::find(_vars[0].begin(), _vars[0].end(), varName);
+        if (pos != _vars[0].end())
+            res = std::distance(_vars[0].begin(), pos);
         return res;
     }
 
 }  // End namespace
-
 
