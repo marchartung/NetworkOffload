@@ -9,9 +9,11 @@
 #define INCLUDE_MESSAGES_ABORTMESSAGE_HPP_
 
 #include "AbstractMessage.hpp"
+#include "AdditionalTypes.hpp"
 
 namespace NetOff
 {
+
     class AbortRequestMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
      public:

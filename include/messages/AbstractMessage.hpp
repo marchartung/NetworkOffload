@@ -8,7 +8,8 @@
 #ifndef INCLUDE_MESSAGES_ABSTRACTMESSAGE_HPP_
 #define INCLUDE_MESSAGES_ABSTRACTMESSAGE_HPP_
 
-#include "../AdditionalTypes.hpp"
+#include "AdditionalTypes.hpp"
+#include <memory>
 
 namespace NetOff
 {

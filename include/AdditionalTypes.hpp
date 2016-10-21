@@ -8,8 +8,6 @@
 #ifndef INCLUDE_ADDITIONALTYPES_HPP_
 #define INCLUDE_ADDITIONALTYPES_HPP_
 
-#include <vector>
-#include <tuple>
 #include <memory>
 
 namespace NetOff
