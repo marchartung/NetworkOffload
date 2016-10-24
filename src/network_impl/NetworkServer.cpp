@@ -28,7 +28,7 @@ namespace NetOff
         IPaddress ip;
         SDLNet_Init();
 
-        if (SDLNet_ResolveHost(&ip, NULL, port) == -1)
+        if (SDLNet_ResolveHost(&ip, nullptr, port) == -1)
         {
             std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
             return false;
@@ -43,7 +43,7 @@ namespace NetOff
 
         _socket = SDLNet_TCP_Accept(_tcpsock);
         unsigned times = 0;
-        while (_socket == NULL && times++ <= _numMaxSleeps)
+        while (_socket == nullptr && times++ <= _numMaxSleeps)
         {
             SDL_Delay(_sleepTime);
             std::cout << "Waiting for client on host " << ip.host << " and port " << port << " ..." << std::endl;
@@ -51,9 +51,8 @@ namespace NetOff
         }
 
         if (_socket == nullptr)
-        {
             return false;
-        }
+
         return true;
     }
 
