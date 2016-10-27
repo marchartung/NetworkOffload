@@ -198,7 +198,7 @@ int BenchClient(const std::string & hostname, int port, const size_t & numInputs
 		sims[i] = noFC.addSimulation("/home/of/very/funny/Fmu.fmu");
 
 		// checkout the variables of the fmu
-		NetOff::VariableList all = noFC.getPossibleOuputVariableNames(sims[i]);
+		NetOff::VariableList all = noFC.getPossibleOutputVariableNames(sims[i]);
 		numStates = all.getReals().size();
 		// set the input variables to send (in this case just the first variable of all fmu variables)
 		NetOff::VariableList inputVars;
@@ -240,7 +240,7 @@ int BenchClient(const std::string & hostname, int port, const size_t & numInputs
 		{
 			// get outputs
 			NetOff::ValueContainer & outputsServer = noFC.recvOutputValues(sims[i], t);
-			std::copy(outputsServer.getRealValues(), outputsServer.getRealValues() + noFC.getPossibleOuputVariableNames(sims[i]).getReals().size(), outputsClient.get());
+			std::copy(outputsServer.getRealValues(), outputsServer.getRealValues() + noFC.getPossibleOutputVariableNames(sims[i]).getReals().size(), outputsClient.get());
 		}
 		t += 0.1;
 	}

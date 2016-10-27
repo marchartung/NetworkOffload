@@ -83,7 +83,7 @@ namespace NetOff
 
         VariableList getPossibleInputVariableNames(const int & simId);
 
-        VariableList getPossibleOuputVariableNames(const int & simId);
+        VariableList getPossibleOutputVariableNames(const int & simId);
 
         /** \brief Initializes the variables the server should provide for the given simulation.
          *

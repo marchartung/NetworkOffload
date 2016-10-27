@@ -92,6 +92,8 @@ namespace NetOff
         bool isSubsetOf(const VariableList & in) const;
 
         size_t findRealVariableNameIndex(const std::string & varName) const;
+	
+	void print() const;
 
      private:
         /*! _vars[0] = Vector containing names of real variables.

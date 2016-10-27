@@ -212,5 +212,23 @@ namespace NetOff
         return res;
     }
 
+    void VariableList::print() const
+    {
+      std::cout << "Begin VariableList::print()\n";
+      std::cout << "Real variables:\n";
+      for (const auto & str1 : _vars[0])
+        std::cout << str1 << "\n";
+
+      std::cout << "Integer variables:\n";
+      for (const auto & str1 : _vars[1])
+        std::cout << str1 << "\n";
+
+      std::cout << "Boolean variables:\n";
+      for (const auto & str1 : _vars[2])
+        std::cout << str1 << "\n";
+
+      std::cout << "End VariableList::print()\n";
+    }
+
 }  // End namespace
 

@@ -25,7 +25,7 @@ int clientFunc(const std::string & hostname, int port) {
 
 	// checkout the variables of the sim
     NetOff::VariableList allInputs = noFC.getPossibleInputVariableNames(funSim);
-	NetOff::VariableList allOutputs = noFC.getPossibleOuputVariableNames(funSim);
+	NetOff::VariableList allOutputs = noFC.getPossibleOutputVariableNames(funSim);
 
 	// set the input variables to send (in this case just the 1st and 2nd variable of all sim variables)
 	NetOff::VariableList inputVars;

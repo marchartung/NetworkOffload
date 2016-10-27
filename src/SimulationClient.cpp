@@ -109,7 +109,7 @@ namespace NetOff
         return _possibleInputVarNames[simId];
     }
 
-    VariableList SimulationClient::getPossibleOuputVariableNames(const int & simId)
+    VariableList SimulationClient::getPossibleOutputVariableNames(const int & simId)
     {
         if (_currentState < CurrentState::INITED || simId >= (long long int) _possibleOutputVarNames.size())
             throw std::runtime_error(
