@@ -17,6 +17,7 @@
 
 namespace NetOff
 {
+
     class AddSimRequestMessage : public AbstractMessage<InitialClientMessageSpecifyer>
     {
      public:
