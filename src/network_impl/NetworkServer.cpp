@@ -35,7 +35,7 @@ namespace NetOff
         }
 
         _tcpsock = SDLNet_TCP_Open(&ip);
-        if (!_tcpsock)
+        if (_tcpsock == nullptr)
         {
             std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
             return false;
@@ -50,10 +50,7 @@ namespace NetOff
             _socket = SDLNet_TCP_Accept(_tcpsock);
         }
 
-        if (_socket == nullptr)
-            return false;
-
-        return true;
+        return (_socket != nullptr);
     }
 
     void NetworkServer::deinitialize()
