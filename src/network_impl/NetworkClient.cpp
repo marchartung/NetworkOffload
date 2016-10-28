@@ -5,7 +5,7 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/network_impl/NetworkClient.hpp"
+#include "network_impl/NetworkClient.hpp"
 
 #include <iostream>
 
@@ -14,10 +14,6 @@ namespace NetOff
 
     NetworkClient::NetworkClient()
             : NetworkMember()
-    {
-    }
-
-    NetworkClient::~NetworkClient()
     {
     }
 
@@ -39,7 +35,7 @@ namespace NetOff
             _socket = SDLNet_TCP_Open(&ip);
             std::cout << "Waiting for server on host " << ip.host << " and port " << port << " ..." << std::endl;
         }
-        while ((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= (unsigned int) _numMaxSleeps));
+        while ((_socket == nullptr || SDLNet_ResolveHost(&ip, host.c_str(), port) == -1) && (times++ <= _numMaxSleeps));
 
         if (SDLNet_ResolveHost(&ip, host.c_str(), port) == -1)
         {

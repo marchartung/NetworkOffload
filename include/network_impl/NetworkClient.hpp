@@ -23,7 +23,7 @@ namespace NetOff
 
         NetworkClient& operator=(const NetworkClient &) = delete;
 
-        ~NetworkClient();
+        ~NetworkClient() = default;
 
         bool initialize(const std::string & host, const int & port);
 
