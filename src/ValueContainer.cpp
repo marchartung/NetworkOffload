@@ -25,7 +25,7 @@ namespace NetOff
     {
     }
 
-    ValueContainer::ValueContainer(std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts,
+    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts,
                                    size_t numBools, const int & id)
             : _data(data),
               _dataPtr(containerStart),
