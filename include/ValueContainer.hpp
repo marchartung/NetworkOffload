@@ -29,7 +29,7 @@ namespace NetOff
 
         ValueContainer & operator=(ValueContainer && vc);
 
-        ~ValueContainer();
+        ~ValueContainer() = default;
 
         void setRealValues(const double * values);
         void setIntValues(const int * values);
@@ -72,7 +72,7 @@ namespace NetOff
 
         int _id;
 
-        ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts,
+        ValueContainer(const std::shared_ptr<char>& data, char * containerStart, size_t numReals, size_t numInts,
                        size_t numBools, const int & id);
 
         void init(size_t numReal, size_t numInt, size_t numBool);

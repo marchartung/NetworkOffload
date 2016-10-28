@@ -5,7 +5,7 @@
  *      Author: Marc Hartung
  */
 
-#include "../include/ValueContainer.hpp"
+#include "ValueContainer.hpp"
 #include <algorithm>
 
 namespace NetOff
@@ -25,7 +25,8 @@ namespace NetOff
     {
     }
 
-    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts, size_t numBools, const int & id)
+    ValueContainer::ValueContainer(std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts,
+                                   size_t numBools, const int & id)
             : _data(data),
               _dataPtr(containerStart),
               _realData(nullptr),
@@ -41,7 +42,7 @@ namespace NetOff
     }
 
     ValueContainer::ValueContainer(ValueContainer && in)
-        : ValueContainer()
+            : ValueContainer()
     {
         *this = std::move(in);
     }
@@ -59,11 +60,6 @@ namespace NetOff
         std::swap(_boolData, vc._boolData);
         std::swap(_id, vc._id);
         return *this;
-    }
-
-    ValueContainer::~ValueContainer()
-    {
-
     }
 
     void ValueContainer::setRealValues(const double * values)
@@ -217,4 +213,4 @@ namespace NetOff
         return numReal * sizeof(double) + numInt * sizeof(int) + numBool * sizeof(char);
     }
 
-}
+}  // namespace NetOff
