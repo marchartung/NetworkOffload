@@ -33,7 +33,6 @@ namespace NetOff
 
      private:
         TCPsocket _tcpsock;
-
     };
 
 } /* namespace NetOff */
