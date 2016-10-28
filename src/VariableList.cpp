@@ -14,6 +14,7 @@
 
 namespace NetOff
 {
+
     VariableList::VariableList(const std::shared_ptr<char>& data)
             : VariableList()
     {
@@ -83,9 +84,11 @@ namespace NetOff
     {
         size_t res = 0;
         res += 3 * sizeof(size_t);  // safe data as: [numReal,numInt,numBool,[numChars,chars]]
-        for (size_t i = 0; i < 3; ++i)
-            for (size_t j = 0; j < _vars[i].size(); ++j)
-                res += getStringDataSize(_vars[i][j]);
+        for (auto i : { 0, 1, 2 })
+        {
+            for (auto& elem : _vars[i])
+                res += getStringDataSize(elem);
+        }
         return res;
     }
 
@@ -112,16 +115,17 @@ namespace NetOff
     {
         // safe data as: [numReal,numInt,numBool,[numChars,chars]]
         char * curPos = data;
-        for (size_t i = 0; i < 3; ++i)
-        {
+        for (auto i : { 0, 1, 2 })
             curPos = saveShiftIntegralInData<size_t>(_vars[i].size(), curPos);
-        }
-        for (size_t i = 0; i < 3; ++i)
-            for (size_t j = 0; j < _vars[i].size(); ++j)
+
+        for (auto i : { 0, 1, 2 })
+        {
+            for (auto& elem : _vars[i])
             {
-                saveStringInData(_vars[i][j], curPos);
-                curPos += getStringDataSize(_vars[i][j]);
+                saveStringInData(elem, curPos);
+                curPos += getStringDataSize(elem);
             }
+        }
     }
 
     VariableList VariableList::getVariableListFromData(const char * data)
@@ -131,17 +135,20 @@ namespace NetOff
 
         vars = std::vector<std::vector<std::string>>(3);
         const char * curPos = data;
-        for (size_t i = 0; i < 3; ++i)
+        for (auto i : { 0, 1, 2 })
         {
             vars[i] = std::vector<std::string>(getIntegralFromData<size_t>(curPos));
             curPos = shift<size_t>(curPos);
         }
-        for (size_t i = 0; i < 3; ++i)
+
+        for (auto i : { 0, 1, 2 })
+        {
             for (size_t j = 0; j < vars[i].size(); ++j)
             {
                 vars[i][j] = createStringFromData(curPos);
                 curPos += getStringDataSize(vars[i][j]);
             }
+        }
         return res;
     }
 
@@ -214,21 +221,21 @@ namespace NetOff
 
     void VariableList::print() const
     {
-      std::cout << "Begin VariableList::print()\n";
-      std::cout << "Real variables:\n";
-      for (const auto & str1 : _vars[0])
-        std::cout << str1 << "\n";
+        std::cout << "Begin VariableList::print()\n";
+        std::cout << "Real variables:\n";
+        for (const auto & str1 : _vars[0])
+            std::cout << str1 << "\n";
 
-      std::cout << "Integer variables:\n";
-      for (const auto & str1 : _vars[1])
-        std::cout << str1 << "\n";
+        std::cout << "Integer variables:\n";
+        for (const auto & str1 : _vars[1])
+            std::cout << str1 << "\n";
 
-      std::cout << "Boolean variables:\n";
-      for (const auto & str1 : _vars[2])
-        std::cout << str1 << "\n";
+        std::cout << "Boolean variables:\n";
+        for (const auto & str1 : _vars[2])
+            std::cout << str1 << "\n";
 
-      std::cout << "End VariableList::print()\n";
+        std::cout << "End VariableList::print()\n";
     }
 
-}  // End namespace
+}  // namespace NetOff
 
