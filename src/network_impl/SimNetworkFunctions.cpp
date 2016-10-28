@@ -5,12 +5,13 @@
  *      Author: Marc Hartung
  */
 
-#include "../../include/network_impl/SimNetworkFunctions.hpp"
+#include "network_impl/SimNetworkFunctions.hpp"
 
 #include <iostream>
 
 namespace NetOff
 {
+
     std::string createStringFromData(const char * data)
     {
         size_t num = getIntegralFromData<size_t>(data);
@@ -27,13 +28,13 @@ namespace NetOff
 
     size_t saveStringInData(const std::string & str, char * data)
     {
-        char * p = saveShiftIntegralInData<size_t>(str.size(),data);
-        for (size_t i = 0; i < str.size(); ++i)
+        char * p = saveShiftIntegralInData<size_t>(str.size(), data);
+        for (auto& elem : str)
         {
-            *p = str[i];
+            *p = elem;
             ++p;
         }
         return getStringDataSize(str);
     }
 
-}
+} /* End namespace NetOff */
