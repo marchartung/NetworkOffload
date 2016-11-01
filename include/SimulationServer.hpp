@@ -52,6 +52,7 @@ namespace NetOff
 
         InitialClientMessageSpecifyer getInitialClientRequest();
 
+        /*! \brief Returns the pair <FmuPath, simId> for the most recently added simulation. */
         std::tuple<std::string, int> getAddedSimulation();
 
         std::string getSimulationFileName() const;
@@ -104,6 +105,7 @@ namespace NetOff
 
         std::string _lastSimulationFile;
 
+        /*! <FmuPath, simId> */
         std::pair<const std::string, int> * _lastAddedSim;
 
         bool _handledLastRequest;
