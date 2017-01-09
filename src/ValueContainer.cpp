@@ -25,9 +25,9 @@ namespace NetOff
     {
     }
 
-    ValueContainer::ValueContainer(const std::shared_ptr<char> & data, char * containerStart, size_t numReals, size_t numInts,
+    ValueContainer::ValueContainer(std::shared_ptr<char> data, char * containerStart, size_t numReals, size_t numInts,
                                    size_t numBools, const int & id)
-            : _data(data),
+            : _data(std::move(data)),
               _dataPtr(containerStart),
               _realData(nullptr),
               _intData(nullptr),
@@ -169,21 +169,30 @@ namespace NetOff
         if (container._numReal > 0)
         {
             for (size_t i = 0; i < container._numReal - 1; ++i)
+            {
                 stream << container._realData[i] << ", ";
+
+            }
             stream << container._realData[container._numReal - 1];
         }
         stream << "], Int:[";
         if (container._numInt > 0)
         {
             for (size_t i = 0; i < container._numInt - 1; ++i)
+            {
                 stream << container._intData[i] << ", ";
+
+            }
             stream << container._intData[container._numInt - 1];
         }
         stream << "], Bool:[";
         if (container._numBool > 0)
         {
             for (size_t i = 0; i < container._numBool - 1; ++i)
+            {
                 stream << container._boolData[i] << ", ";
+
+            }
             stream << container._boolData[container._numBool - 1];
         }
         stream << "]]";

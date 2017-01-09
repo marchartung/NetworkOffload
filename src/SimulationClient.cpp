@@ -18,8 +18,8 @@ namespace NetOff
     {
     }
 
-    SimulationClient::SimulationClient(const std::string & hostAddress, const int & port)
-            : _hostAddress(hostAddress),
+    SimulationClient::SimulationClient(std::string hostAddress, const int & port)
+            : _hostAddress(std::move(hostAddress)),
               _port(port),
               _pathToId(),
               _currentState(CurrentState::NONE),
@@ -46,8 +46,10 @@ namespace NetOff
             std::cout << "SimulationClient: Port or host address wasn't set.\n";
             return false;
         }
-        else if (_currentState > CurrentState::NONE)
+        if (_currentState > CurrentState::NONE)
+        {
             return true;
+        }
 
         if (_netClient.initialize(_hostAddress, _port))
         {
@@ -78,7 +80,9 @@ namespace NetOff
 
         // The very same simulation was already added.
         if (_pathToId.find(serverPathToSim) != _pathToId.end())
+        {
             return _pathToId[serverPathToSim];
+        }
 
         const int & simId = _pathToId.size();
 
@@ -105,7 +109,7 @@ namespace NetOff
 
     VariableList SimulationClient::getPossibleInputVariableNames(const int & simId)
     {
-        if (_currentState < CurrentState::INITED || simId >= _possibleInputVarNames.size())
+        if (_currentState < CurrentState::INITED || static_cast<size_t>(simId) >= _possibleInputVarNames.size())
         {
             throw std::runtime_error(
                     "ERROR: SimulationClient: It's not possible to get variables names before calling initialize(host,port).");
@@ -115,7 +119,7 @@ namespace NetOff
 
     VariableList SimulationClient::getPossibleOutputVariableNames(const int & simId)
     {
-        if (_currentState < CurrentState::INITED || simId >= _possibleOutputVarNames.size())
+        if (_currentState < CurrentState::INITED || static_cast<size_t>(simId) >= _possibleOutputVarNames.size())
         {
             throw std::runtime_error(
                     "ERROR: SimulationClient: It's not possible to get variables names before calling initialize(host,port).");
@@ -148,11 +152,17 @@ namespace NetOff
         InitSimulationMessage initMessage(simId, inputs, outputs);
         this->sendInitialRequest(initMessage);
         if (inputsReal != nullptr)
+        {
             _inputMessages[simId].getContainer().setRealValues(inputsReal);
+        }
         if (inputsInt != nullptr)
+        {
             _inputMessages[simId].getContainer().setIntValues(inputsInt);
+        }
         if (inputsBool != nullptr)
+        {
             _inputMessages[simId].getContainer().setBoolValues(inputsBool);
+        }
         _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
         send(simId);
         _isInitialized[simId] = recv(simId, 0.0, ServerMessageSpecifyer::SUCCESS_SIM_INIT);
@@ -210,42 +220,54 @@ namespace NetOff
     bool SimulationClient::pause()
     {
         if (_currentState < CurrentState::STARTED)
+        {
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to pause before calling start().");
+        }
 
         _inputMessages[0].setSpecifyer(ClientMessageSpecifyer::PAUSE);
         send(0);
 
         bool res = recv(0, _inputMessages[0].getTime(), ServerMessageSpecifyer::SUCCESS_PAUSE);
         if (res)
+        {
             _currentState = CurrentState::PAUSED;
+        }
         return res;
     }
 
     bool SimulationClient::unpause()
     {
         if (_currentState < CurrentState::STARTED)
+        {
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to unpause before calling start().");
+        }
 
         _inputMessages[0].setSpecifyer(ClientMessageSpecifyer::UNPAUSE);
         send(0);
 
         bool res = recv(0, _inputMessages[0].getTime(), ServerMessageSpecifyer::SUCCESS_UNPAUSE);
         if (res)
+        {
             _currentState = CurrentState::STARTED;
+        }
         return res;
     }
 
     bool SimulationClient::reset()
     {
         if (_currentState < CurrentState::STARTED)
+        {
             throw std::runtime_error("ERROR: SimulationClient: It's not possible to reset before calling start().");
+        }
 
         _inputMessages[0].setSpecifyer(ClientMessageSpecifyer::RESET);
         send(0);
 
         bool res = recv(0, _inputMessages[0].getTime(), ServerMessageSpecifyer::SUCCESS_RESET);
         if (res)
+        {
             _currentState = CurrentState::INITED;
+        }
         return res;
     }
 
@@ -307,7 +329,9 @@ namespace NetOff
         }
 
         if (vals.getSimId() != simId || vals.data() != getInputValueContainer(simId).data())
+        {
             throw std::runtime_error("SimulationClient: The ValueContainer is collected via getValueContainerInput()");
+        }
 
         _inputMessages[simId].setSpecifyer(ClientMessageSpecifyer::INPUTS);
         _inputMessages[simId].setTime(time);

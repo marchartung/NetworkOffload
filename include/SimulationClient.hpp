@@ -33,7 +33,7 @@ namespace NetOff
          * \param hostAddress   Address of the server to connect this SimulationClient.
          * \param port          The port to use for the connection.
          */
-        SimulationClient(const std::string & hostAddress, const int & port);
+        SimulationClient(std::string hostAddress, const int & port);
 
         /*! \brief Destructs the SimulationClient by killing all sockets. */
         ~SimulationClient();

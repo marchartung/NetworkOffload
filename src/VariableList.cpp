@@ -8,9 +8,9 @@
 #include "VariableList.hpp"
 #include "network_impl/SimNetworkFunctions.hpp"
 
+#include <algorithm>
 #include <ostream>
 #include <string>
-#include <algorithm>
 
 namespace NetOff
 {
@@ -87,7 +87,9 @@ namespace NetOff
         for (auto i : { 0, 1, 2 })
         {
             for (auto& elem : _vars[i])
+            {
                 res += getStringDataSize(elem);
+            }
         }
         return res;
     }
@@ -116,7 +118,9 @@ namespace NetOff
         // safe data as: [numReal,numInt,numBool,[numChars,chars]]
         char * curPos = data;
         for (auto i : { 0, 1, 2 })
+        {
             curPos = saveShiftIntegralInData<size_t>(_vars[i].size(), curPos);
+        }
 
         for (auto i : { 0, 1, 2 })
         {
@@ -143,10 +147,10 @@ namespace NetOff
 
         for (auto i : { 0, 1, 2 })
         {
-            for (size_t j = 0; j < vars[i].size(); ++j)
+            for (auto & j : vars[i])
             {
-                vars[i][j] = createStringFromData(curPos);
-                curPos += getStringDataSize(vars[i][j]);
+                j = createStringFromData(curPos);
+                curPos += getStringDataSize(j);
             }
         }
         return res;
@@ -182,14 +186,18 @@ namespace NetOff
             {
                 abort = true;
                 for (const auto & str2 : in._vars[i])
+                {
                     if (str1 == str2)
                     {
                         abort = false;
                         break;
                     }
+                }
 
                 if (abort)
+                {
                     return false;
+                }
             }
         }
         return true;
@@ -215,7 +223,9 @@ namespace NetOff
         size_t res = 0;
         auto pos = std::find(_vars[0].begin(), _vars[0].end(), varName);
         if (pos != _vars[0].end())
+        {
             res = std::distance(_vars[0].begin(), pos);
+        }
         return res;
     }
 
@@ -224,16 +234,22 @@ namespace NetOff
         std::cout << "Begin VariableList::print()\n";
         std::cout << "Real variables:\n";
         for (const auto & str1 : _vars[0])
+        {
             std::cout << str1 << "\n";
 
+        }
         std::cout << "Integer variables:\n";
         for (const auto & str1 : _vars[1])
+        {
             std::cout << str1 << "\n";
 
+        }
         std::cout << "Boolean variables:\n";
         for (const auto & str1 : _vars[2])
+        {
             std::cout << str1 << "\n";
 
+        }
         std::cout << "End VariableList::print()\n";
     }
 
