@@ -43,6 +43,33 @@ endif(NOT(SDL2_NET_FOUND))
 
 
 # ---------------------------
+# Compiler Flags
+# ---------------------------
+# Check for C++11 Support
+INCLUDE(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+IF(COMPILER_SUPPORTS_CXX11)
+  ADD_COMPILE_OPTIONS(-std=c++11 -Wall)
+ELSEIF(COMPILER_SUPPORTS_CXX0X)
+  ADD_COMPILE_OPTIONS(-std=c++0x -Wall)
+ELSE(COMPILER_SUPPORTS_CXX11)
+  MESSAGE(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+ENDIF(COMPILER_SUPPORTS_CXX11)
+# Compiler Flags Used In Debug Mode
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+  ADD_COMPILE_OPTIONS(-O0 -Weffc++)
+  #-fno-elide-constructors -pedantic-errors -ansi -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations -Winit-self)
+
+  # Check for Compiler Warnings
+  CHECK_CXX_COMPILER_FLAG("-Wextra -Wunused" COMPILER_SUPPORTS_WEXTRA)
+  IF(COMPILER_SUPPORTS_WEXTRA)
+    ADD_COMPILE_OPTIONS(-Wextra -Wunused)
+  ENDIF(COMPILER_SUPPORTS_WEXTRA)
+ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
+
+
+# ---------------------------
 # Setup Build
 # ---------------------------
 file(GLOB_RECURSE SRCS "${PROJECT_SOURCE_DIR}/src/*.cpp")
@@ -82,9 +109,12 @@ set_property(TARGET SimpleSim PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SimpleSim PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples")
 add_custom_command(TARGET SimpleSim PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy
                    "${CMAKE_CURRENT_SOURCE_DIR}/test/test_src.txt" "${CMAKE_BINARY_DIR}/examples")
+
+install(FILES "test/test_src.txt" DESTINATION "${CMAKE_INSTALL_PREFIX}/examples/NetOff")
+
 target_link_libraries(SimpleSim ${NETOFF_LIBRARIES_INTERNAL})
 target_include_directories(SimpleSim PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
-install(TARGETS SimpleSim DESTINATION "example/NetOff")
+install(TARGETS SimpleSim DESTINATION "examples/NetOff")
 
 # Test program NetOffBenchmark
 add_executable(NetOffBenchmark "test/NetOffBenchmark.cpp")
@@ -93,4 +123,4 @@ set_property(TARGET NetOffBenchmark PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET NetOffBenchmark PROPERTY BUILD_TYPE RELEASE)
 target_link_libraries(NetOffBenchmark ${NETOFF_LIBRARIES_INTERNAL})
 target_include_directories(NetOffBenchmark PUBLIC ${NETOFF_INCLUDE_DIRS_INTERNAL})
-install(TARGETS NetOffBenchmark DESTINATION "example/NetOffBenchmark")
+install(TARGETS NetOffBenchmark DESTINATION "examples/NetOffBenchmark")
